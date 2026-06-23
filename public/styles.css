@@ -1,0 +1,2687 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0d10;
+  --bg-2: #111419;
+  --panel: rgba(20, 24, 30, 0.88);
+  --panel-2: rgba(27, 32, 39, 0.92);
+  --panel-3: rgba(35, 40, 48, 0.92);
+  --line: rgba(255, 255, 255, 0.09);
+  --line-2: rgba(255, 255, 255, 0.16);
+  --text: #f4f7fb;
+  --muted: #a8b0bd;
+  --faint: #737d8c;
+  --teal: #2dd4bf;
+  --blue: #60a5fa;
+  --lime: #a3e635;
+  --amber: #fbbf24;
+  --rose: #fb7185;
+  --violet: #a78bfa;
+  --teal-soft: rgba(45, 212, 191, 0.16);
+  --blue-soft: rgba(96, 165, 250, 0.16);
+  --lime-soft: rgba(163, 230, 53, 0.14);
+  --amber-soft: rgba(251, 191, 36, 0.16);
+  --rose-soft: rgba(251, 113, 133, 0.16);
+  --radius: 8px;
+  --shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+  --mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(45, 212, 191, 0.08), transparent 28rem),
+    linear-gradient(135deg, #101319 0%, #0b0d10 48%, #11100d 100%);
+  color: var(--text);
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+.bgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(#000 0%, rgba(0, 0, 0, 0.72) 46%, transparent 100%);
+}
+
+h1,
+h2,
+h3,
+p,
+pre {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 15px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.kicker {
+  color: var(--teal);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.subtle {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.panelHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.headActions,
+.runTools,
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.appShell {
+  width: min(1500px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 14px 0 28px;
+  display: grid;
+  gap: 12px;
+}
+
+.appHeader {
+  position: sticky;
+  top: 10px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+}
+
+.brandBlock,
+.loginBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandMark {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--teal), var(--lime));
+  color: #07100d;
+  font-weight: 900;
+  letter-spacing: 0;
+  box-shadow: 0 10px 24px rgba(45, 212, 191, 0.22);
+}
+
+.headerStatus {
+  display: grid;
+  gap: 2px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.headerStatus p {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.clock {
+  font-family: var(--mono);
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.btn {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease, opacity 0.16s ease;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, var(--teal), var(--lime));
+  color: #07100d;
+}
+
+.btn.ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-2);
+  color: var(--text);
+}
+
+.btn.small {
+  height: 30px;
+  padding: 0 11px;
+  font-size: 11px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn[hidden],
+[hidden] {
+  display: none !important;
+}
+
+.btn:disabled,
+.btn.isBusy {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.badge {
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Auth */
+.authOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  place-items: center;
+  padding: 16px;
+  background:
+    linear-gradient(160deg, rgba(45, 212, 191, 0.14), transparent 36%),
+    linear-gradient(135deg, #101319, #0b0d10);
+}
+
+.authOverlay.active {
+  display: grid;
+}
+
+body.authLocked {
+  overflow: hidden;
+}
+
+body.authLocked .appShell {
+  visibility: hidden;
+}
+
+.loginPanel {
+  width: min(100%, 430px);
+  display: grid;
+  gap: 16px;
+  padding: 26px;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  background: rgba(17, 20, 25, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.loginSignal {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.loginSignal span {
+  min-height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.formError {
+  min-height: 18px;
+  color: var(--rose);
+  font-size: 12px;
+}
+
+/* Metrics */
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metric {
+  min-height: 104px;
+  display: grid;
+  align-content: space-between;
+  gap: 8px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.metric span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.metric strong {
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.metric small {
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.metric.ok strong {
+  color: var(--lime);
+}
+
+.metric.warn strong {
+  color: var(--amber);
+}
+
+.metric.bad strong {
+  color: var(--rose);
+}
+
+.metric.info strong {
+  color: var(--teal);
+}
+
+/* Layouts */
+.commandLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.75fr);
+  gap: 12px;
+}
+
+.analyticsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr) minmax(280px, 0.72fr);
+  gap: 12px;
+}
+
+.taskGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.monitorGrid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1.15fr);
+  gap: 12px;
+}
+
+.jobsPanel {
+  grid-column: 1 / -1;
+}
+
+.runPanel,
+.decisionPanel,
+.chartPanel,
+.formPanel,
+.latestVideoPanel,
+.ttsPanel,
+.consolePanel,
+.tablePanel {
+  padding: 14px;
+}
+
+/* Run panel */
+.progressLine,
+.queueGauge {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.progressLine span,
+.queueGauge span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--teal), var(--lime));
+  transition: width 0.35s ease;
+}
+
+.progressLine span.running {
+  background: linear-gradient(90deg, var(--teal), var(--blue), var(--teal));
+  background-size: 180% 100%;
+  animation: sweep 1.7s linear infinite;
+}
+
+.runDetail {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 12px;
+}
+
+.runDetail strong,
+.runDetail b {
+  color: var(--teal);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.runDetail span {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.runBadge {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.runBadge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--faint);
+}
+
+.runBadge.running {
+  color: var(--teal);
+  border-color: rgba(45, 212, 191, 0.45);
+  background: var(--teal-soft);
+}
+
+.runBadge.running::before {
+  background: var(--teal);
+  box-shadow: 0 0 14px var(--teal);
+  animation: pulse 1.3s ease-in-out infinite;
+}
+
+.runBadge.completed,
+.runBadge.success {
+  color: var(--lime);
+  border-color: rgba(163, 230, 53, 0.4);
+  background: var(--lime-soft);
+}
+
+.runBadge.completed::before,
+.runBadge.success::before {
+  background: var(--lime);
+}
+
+.runBadge.failed,
+.runBadge.failure {
+  color: var(--rose);
+  border-color: rgba(251, 113, 133, 0.4);
+  background: var(--rose-soft);
+}
+
+.runBadge.failed::before,
+.runBadge.failure::before {
+  background: var(--rose);
+}
+
+.processRail {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.processNode {
+  flex: 0 0 118px;
+  min-height: 78px;
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  padding: 9px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.processNode i {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.processNode strong {
+  font-size: 12px;
+}
+
+.processNode small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.processNode.done {
+  border-color: rgba(163, 230, 53, 0.36);
+  background: var(--lime-soft);
+}
+
+.processNode.active {
+  border-color: rgba(45, 212, 191, 0.52);
+  background: var(--teal-soft);
+}
+
+.processNode.failed {
+  border-color: rgba(251, 113, 133, 0.45);
+  background: var(--rose-soft);
+}
+
+.processNode.muted {
+  opacity: 0.55;
+}
+
+.processNode.done i,
+.processNode.active i {
+  background: var(--teal);
+  color: #06120f;
+}
+
+.processNode.failed i {
+  background: var(--rose);
+  color: #190609;
+}
+
+.insightList {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.insight {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 9px;
+  align-items: start;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.insight b {
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: var(--teal);
+}
+
+.insight.warn b {
+  background: var(--amber);
+}
+
+.insight.bad b {
+  background: var(--rose);
+}
+
+.insight strong {
+  display: block;
+  font-size: 12px;
+}
+
+.insight span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* Charts */
+.trendChart {
+  width: 100%;
+  min-height: 210px;
+  display: block;
+}
+
+.chartGridLine {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1;
+}
+
+.chartPath {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chartArea {
+  fill: rgba(45, 212, 191, 0.12);
+}
+
+.chartDot {
+  fill: var(--lime);
+  stroke: #0b0d10;
+  stroke-width: 2;
+}
+
+.chartLabel {
+  fill: var(--muted);
+  font-size: 10px;
+  font-family: var(--mono);
+}
+
+.barChart {
+  min-height: 210px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: end;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.barItem {
+  display: grid;
+  gap: 7px;
+  align-items: end;
+  text-align: center;
+}
+
+.barTrack {
+  height: 150px;
+  display: flex;
+  align-items: end;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  overflow: hidden;
+}
+
+.barFill {
+  width: 100%;
+  min-height: 3px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, var(--teal), var(--blue));
+}
+
+.barItem small {
+  color: var(--faint);
+  font-size: 10px;
+  font-family: var(--mono);
+}
+
+.barItem strong {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.platformGrid {
+  display: grid;
+  gap: 8px;
+}
+
+.platformItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.platformItem strong {
+  font-size: 12px;
+}
+
+.platformItem span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.platformItem.ok {
+  border-color: rgba(163, 230, 53, 0.28);
+}
+
+.platformItem.warn {
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+/* Forms */
+.formPanel {
+  display: grid;
+  gap: 12px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.field {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.field.wide {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field select,
+input,
+select {
+  width: 100%;
+  height: 36px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(8, 10, 13, 0.82);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  outline: 0;
+}
+
+input::placeholder {
+  color: var(--faint);
+}
+
+.field input:focus,
+.field select:focus,
+input:focus,
+select:focus {
+  border-color: rgba(45, 212, 191, 0.6);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.12);
+}
+
+select option {
+  background: var(--bg-2);
+  color: var(--text);
+}
+
+.toggleField {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(8, 10, 13, 0.66);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.toggleField input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--teal);
+}
+
+.latestVideoPreview {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.latestVideoFrame {
+  position: relative;
+  min-height: 320px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.latestVideoFrame video {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  display: block;
+  background: #050607;
+  object-fit: contain;
+}
+
+.introPreviewOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  align-content: end;
+  padding: 14px;
+  background: #050607;
+}
+
+.introPreviewOverlay[hidden] {
+  display: none;
+}
+
+.introPreviewOverlay img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.introPreviewOverlay div {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.66);
+}
+
+.introPreviewOverlay strong {
+  font-size: 13px;
+}
+
+.introPreviewOverlay span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.latestVideoInfo {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.latestVideoInfo > strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.latestVideoInfo p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.latestVideoMeta,
+.latestVideoActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.latestVideoMeta {
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.emptyLatest {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+}
+
+.ttsTester {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto minmax(220px, 0.6fr);
+  gap: 9px;
+  align-items: end;
+}
+
+.ttsTester audio {
+  width: 100%;
+  height: 36px;
+}
+
+.ttsTester .subtle {
+  grid-column: 1 / -1;
+  min-height: 18px;
+}
+
+/* Console and tables */
+.consolePanel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+#consoleOutput {
+  min-height: 280px;
+  max-height: 420px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.32);
+  color: #d8dee9;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#consoleOutput .ts {
+  color: var(--faint);
+}
+
+#consoleOutput .lvl-error {
+  color: var(--rose);
+}
+
+#consoleOutput .lvl-system {
+  color: var(--teal);
+}
+
+.tableWrap {
+  max-height: 360px;
+  overflow: auto;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  text-align: left;
+  vertical-align: top;
+  font-size: 11px;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(17, 20, 25, 0.96);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+td {
+  color: var(--text);
+}
+
+td a {
+  max-width: 260px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.emptyRow {
+  color: var(--muted);
+  text-align: center;
+}
+
+.moreBtn {
+  margin: 10px auto 0;
+}
+
+.pill {
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.pill.published,
+.pill.completed,
+.pill.success,
+.pill.thumbnail_set {
+  border-color: rgba(163, 230, 53, 0.36);
+  background: var(--lime-soft);
+  color: var(--lime);
+}
+
+.pill.queued,
+.pill.ready_to_publish,
+.pill.published_with_warnings,
+.pill.dry_run,
+.pill.partial_ready,
+.pill.daily_limit_reached,
+.pill.selected {
+  border-color: rgba(251, 191, 36, 0.36);
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.pill.failed,
+.pill.failure,
+.pill.failed_publish,
+.pill.publish_failed {
+  border-color: rgba(251, 113, 133, 0.36);
+  background: var(--rose-soft);
+  color: var(--rose);
+}
+
+.pill.running,
+.pill.processing,
+.pill.in_progress,
+.pill.clipper_processing,
+.pill.clip_processing,
+.pill.publishing {
+  border-color: rgba(45, 212, 191, 0.36);
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.pill.expired,
+.pill.skipped_duplicate,
+.pill.disabled {
+  color: var(--faint);
+}
+
+/* 2026 command dashboard refresh */
+:root {
+  --bg: #080b0f;
+  --bg-2: #11161c;
+  --panel: rgba(15, 20, 26, 0.9);
+  --panel-2: rgba(22, 29, 37, 0.94);
+  --line: rgba(225, 232, 240, 0.1);
+  --line-2: rgba(225, 232, 240, 0.18);
+  --text: #f6f8fb;
+  --muted: #a9b4c3;
+  --faint: #718095;
+  --teal: #1fd6c2;
+  --blue: #5b9cff;
+  --lime: #9de36a;
+  --amber: #f4bd50;
+  --rose: #ff6b7f;
+  --violet: #b59cff;
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+}
+
+body {
+  background:
+    linear-gradient(180deg, rgba(21, 28, 36, 0.96), rgba(8, 11, 15, 1) 34rem),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 76px);
+}
+
+.bgLayer {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.034) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.034) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(31, 214, 194, 0.06), transparent 45%, rgba(244, 189, 80, 0.05));
+  background-size: 42px 42px, 42px 42px, 100% 100%;
+}
+
+.appHeader {
+  top: 12px;
+  border-color: rgba(31, 214, 194, 0.2);
+  background: rgba(10, 14, 19, 0.9);
+}
+
+.brandMark {
+  background: linear-gradient(135deg, #f4bd50, #1fd6c2 58%, #5b9cff);
+  color: #07100d;
+}
+
+.loginPanel {
+  width: min(100%, 520px);
+  padding: 30px;
+  background:
+    linear-gradient(180deg, rgba(26, 33, 42, 0.98), rgba(10, 14, 19, 0.96)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 42px);
+}
+
+.loginBrand {
+  align-items: flex-start;
+}
+
+.loginBrand h1 {
+  margin-top: 2px;
+  font-size: clamp(28px, 7vw, 42px);
+}
+
+.loginBrand span:not(.brandMark) {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.loginSignal span {
+  min-height: 56px;
+  align-content: center;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.loginSignal b {
+  color: var(--text);
+}
+
+.loginField input {
+  height: 46px;
+  font-size: 15px;
+}
+
+.topOpsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.7fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.heroConsole {
+  min-height: 360px;
+  border-color: rgba(31, 214, 194, 0.18);
+  background:
+    linear-gradient(180deg, rgba(11, 15, 20, 0.96), rgba(8, 10, 14, 0.96)),
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(255, 255, 255, 0.018) 28px 29px);
+}
+
+.heroConsole #consoleOutput {
+  min-height: 286px;
+  max-height: 470px;
+  border-color: rgba(31, 214, 194, 0.16);
+  background:
+    linear-gradient(180deg, rgba(1, 5, 7, 0.84), rgba(4, 8, 12, 0.9)),
+    repeating-linear-gradient(0deg, transparent 0 24px, rgba(31, 214, 194, 0.035) 24px 25px);
+  color: #d7f7ef;
+}
+
+.reliabilityPanel {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  background: linear-gradient(180deg, rgba(22, 29, 37, 0.94), rgba(13, 18, 24, 0.94));
+}
+
+.reliabilityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.reliabilityGrid article {
+  min-height: 102px;
+  display: grid;
+  align-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.reliabilityGrid span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.reliabilityGrid strong {
+  color: var(--teal);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.reliabilityGrid small {
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.opsNote {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid rgba(244, 189, 80, 0.28);
+  border-radius: 8px;
+  background: rgba(244, 189, 80, 0.08);
+}
+
+.opsNote strong {
+  color: var(--amber);
+  font-size: 12px;
+}
+
+.opsNote span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.diagnosticFeed {
+  display: grid;
+  gap: 8px;
+}
+
+.diagnosticFeed article,
+.diagnosticFeed > span {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid rgba(255, 107, 127, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 107, 127, 0.06);
+}
+
+.diagnosticFeed strong {
+  color: var(--rose);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.diagnosticFeed span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.diagnosticFeed small {
+  color: var(--faint);
+  font-size: 10px;
+}
+
+.metricGrid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.metric,
+.panel {
+  border-color: rgba(225, 232, 240, 0.11);
+}
+
+.metric {
+  background: linear-gradient(180deg, rgba(22, 29, 37, 0.94), rgba(12, 17, 23, 0.92));
+}
+
+.analyticsGrid {
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.75fr) minmax(300px, 0.8fr);
+}
+
+.monitorGrid {
+  grid-template-columns: 1fr;
+}
+
+.tablePanel {
+  background: rgba(15, 20, 26, 0.92);
+}
+
+.miniInput,
+.miniSelect {
+  width: 150px;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: rgba(8, 10, 13, 0.72);
+  color: var(--text);
+  font: inherit;
+  font-size: 11px;
+  outline: 0;
+}
+
+.miniSelect {
+  width: 118px;
+}
+
+.miniInput:focus,
+.miniSelect:focus {
+  border-color: rgba(31, 214, 194, 0.62);
+  box-shadow: 0 0 0 3px rgba(31, 214, 194, 0.12);
+}
+
+.badge.warn {
+  border-color: rgba(244, 189, 80, 0.4);
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #f4bd50, #1fd6c2);
+  color: #07100d;
+}
+
+.btn.ghost:hover {
+  border-color: rgba(31, 214, 194, 0.42);
+  background: rgba(31, 214, 194, 0.08);
+  text-decoration: none;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.55);
+    opacity: 0.55;
+  }
+}
+
+@keyframes sweep {
+  to {
+    background-position: 180% 0;
+  }
+}
+
+@media (max-width: 1180px) {
+  .metricGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .topOpsGrid,
+  .commandLayout,
+  .analyticsGrid,
+  .taskGrid,
+  .monitorGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .appShell {
+    width: 100%;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .appHeader {
+    position: static;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 11px;
+  }
+
+  .headerStatus {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    text-align: left;
+  }
+
+  .toolbar {
+    justify-content: flex-end;
+  }
+
+  .topOpsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .metricGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metric {
+    min-height: 96px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .latestVideoPreview {
+    grid-template-columns: 1fr;
+  }
+
+  .latestVideoFrame,
+  .latestVideoFrame video {
+    min-height: 260px;
+  }
+
+  .ttsTester {
+    grid-template-columns: 1fr;
+  }
+
+  .field.wide {
+    grid-column: auto;
+  }
+
+  .runDetail {
+    grid-template-columns: 1fr auto;
+  }
+
+  .runDetail span {
+    grid-column: 1 / -1;
+    white-space: normal;
+  }
+
+  .analyticsGrid {
+    gap: 10px;
+  }
+
+  .barChart {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 620px) {
+  body {
+    font-size: 12px;
+  }
+
+  .appShell {
+    padding: 8px 8px max(18px, env(safe-area-inset-bottom));
+  }
+
+  .appHeader,
+  .panel,
+  .runPanel,
+  .decisionPanel,
+  .chartPanel,
+  .formPanel,
+  .consolePanel,
+  .tablePanel {
+    padding: 11px;
+  }
+
+  .brandMark {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .brandBlock h1 {
+    max-width: 190px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 15px;
+  }
+
+  .brandBlock .kicker {
+    display: none;
+  }
+
+  .toolbar {
+    gap: 5px;
+  }
+
+  .toolbar .btn {
+    height: 28px;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+
+  .metricGrid {
+    gap: 8px;
+  }
+
+  .metric {
+    min-height: 84px;
+    padding: 10px;
+  }
+
+  .metric strong {
+    font-size: 22px;
+  }
+
+  .panelHead {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .runTools,
+  .headActions {
+    justify-content: flex-end;
+  }
+
+  .processNode {
+    flex-basis: 98px;
+    min-height: 72px;
+  }
+
+  .platformGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reliabilityGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .miniInput,
+  .miniSelect {
+    width: 100%;
+  }
+
+  .platformItem {
+    min-height: 52px;
+    display: grid;
+    align-content: center;
+    gap: 3px;
+  }
+
+  .trendChart,
+  .barChart {
+    min-height: 180px;
+  }
+
+  .barTrack {
+    height: 126px;
+  }
+
+  #consoleOutput {
+    min-height: 210px;
+    max-height: 300px;
+  }
+
+  .tableWrap {
+    max-height: none;
+    overflow: visible;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  table {
+    min-width: 0;
+  }
+
+  thead {
+    position: absolute;
+    left: -9999px;
+  }
+
+  tbody tr {
+    margin-bottom: 8px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
+    text-align: right;
+  }
+
+  td:last-child {
+    border-bottom: 0;
+  }
+
+  td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    color: var(--faint);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+
+  td a {
+    max-width: 180px;
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  td > :not(.pill):not(a) {
+    overflow-wrap: anywhere;
+  }
+
+  td.emptyRow {
+    justify-content: center;
+    text-align: center;
+  }
+
+  td.emptyRow::before {
+    display: none;
+  }
+
+  .loginPanel {
+    padding: 20px;
+  }
+
+  .loginSignal {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .appHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    justify-content: stretch;
+  }
+
+  .toolbar .btn {
+    flex: 1 1 auto;
+  }
+
+  .metricGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brandBlock h1 {
+    max-width: none;
+  }
+}
+
+/* Prism operations refresh */
+:root {
+  --bg: #05070b;
+  --bg-2: #0d1118;
+  --panel: rgba(9, 13, 20, 0.9);
+  --panel-2: rgba(15, 21, 31, 0.93);
+  --panel-3: rgba(21, 28, 40, 0.94);
+  --line: rgba(236, 245, 255, 0.1);
+  --line-2: rgba(236, 245, 255, 0.2);
+  --text: #f8fbff;
+  --muted: #aab8c8;
+  --faint: #68788e;
+  --teal: #12e6d1;
+  --blue: #4a8cff;
+  --lime: #b8f45d;
+  --amber: #ffbd4a;
+  --rose: #ff4f7b;
+  --violet: #d06bff;
+  --teal-soft: rgba(18, 230, 209, 0.14);
+  --blue-soft: rgba(74, 140, 255, 0.14);
+  --lime-soft: rgba(184, 244, 93, 0.12);
+  --amber-soft: rgba(255, 189, 74, 0.14);
+  --rose-soft: rgba(255, 79, 123, 0.14);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.46);
+}
+
+body {
+  background:
+    linear-gradient(118deg, rgba(255, 79, 123, 0.13) 0 18%, transparent 18% 48%, rgba(18, 230, 209, 0.12) 48% 62%, transparent 62%),
+    linear-gradient(180deg, #090d13 0%, #05070b 45%, #07090d 100%);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+body::before {
+  background:
+    repeating-linear-gradient(110deg, transparent 0 34px, rgba(255, 255, 255, 0.035) 34px 35px),
+    linear-gradient(140deg, transparent 0 56%, rgba(184, 244, 93, 0.08) 56% 60%, transparent 60%),
+    linear-gradient(25deg, rgba(74, 140, 255, 0.12), transparent 34%);
+  animation: prismShift 28s linear infinite;
+}
+
+body::after {
+  inset: 0 0 auto;
+  height: 9px;
+  background: linear-gradient(90deg, var(--rose), var(--amber), var(--lime), var(--teal), var(--blue), var(--violet));
+  box-shadow: 0 0 26px rgba(18, 230, 209, 0.35);
+}
+
+.bgLayer {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    repeating-linear-gradient(135deg, transparent 0 86px, rgba(255, 255, 255, 0.025) 86px 88px);
+  background-size: 36px 36px, 36px 36px, 100% 100%;
+  mask-image: linear-gradient(#000 0%, rgba(0, 0, 0, 0.82) 58%, transparent 100%);
+}
+
+.appShell {
+  width: min(1680px, calc(100% - 30px));
+  gap: 14px;
+  padding-top: 18px;
+}
+
+.panel,
+.metric {
+  position: relative;
+  border-color: rgba(236, 245, 255, 0.12);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), transparent 34%),
+    linear-gradient(180deg, rgba(15, 21, 31, 0.94), rgba(8, 12, 18, 0.92));
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.panel::before,
+.metric::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--rose), var(--amber), var(--teal));
+  opacity: 0.85;
+}
+
+.panelHead {
+  position: relative;
+}
+
+.kicker {
+  color: var(--amber);
+}
+
+.appHeader {
+  top: 14px;
+  padding: 13px 16px;
+  border-color: rgba(18, 230, 209, 0.24);
+  background:
+    linear-gradient(90deg, rgba(255, 79, 123, 0.08), transparent 34%, rgba(18, 230, 209, 0.08)),
+    rgba(7, 10, 16, 0.9);
+}
+
+.brandMark {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--rose), var(--amber) 34%, var(--teal) 68%, var(--blue));
+  color: #05070b;
+  box-shadow: 0 14px 32px rgba(18, 230, 209, 0.24);
+}
+
+.headerStatus {
+  justify-self: center;
+  min-width: min(560px, 100%);
+  padding: 9px 14px;
+  border: 1px solid rgba(236, 245, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.clock,
+.runTimer {
+  color: var(--lime);
+  font-family: var(--mono);
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, var(--rose), var(--amber) 45%, var(--lime));
+  color: #11070a;
+  box-shadow: 0 14px 30px rgba(255, 79, 123, 0.2);
+}
+
+.btn.ghost {
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.btn.ghost:hover {
+  border-color: rgba(255, 189, 74, 0.5);
+  background: rgba(255, 189, 74, 0.1);
+}
+
+.authOverlay {
+  background:
+    linear-gradient(120deg, rgba(255, 79, 123, 0.2) 0 22%, transparent 22% 54%, rgba(18, 230, 209, 0.16) 54% 68%, transparent 68%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 48px),
+    #05070b;
+}
+
+.loginPanel {
+  width: min(100%, 610px);
+  gap: 18px;
+  padding: 34px;
+  border-color: rgba(255, 189, 74, 0.28);
+  background:
+    linear-gradient(145deg, rgba(255, 79, 123, 0.13), transparent 34%),
+    linear-gradient(315deg, rgba(18, 230, 209, 0.14), transparent 40%),
+    rgba(8, 12, 18, 0.96);
+}
+
+.loginPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 5px;
+  background: linear-gradient(90deg, var(--rose), var(--amber), var(--lime), var(--teal));
+}
+
+.loginBrand .brandMark {
+  width: 58px;
+  height: 58px;
+  font-size: 17px;
+}
+
+.loginBrand h1 {
+  font-size: 40px;
+}
+
+.loginBrand span:not(.brandMark) {
+  color: #d2dbe8;
+}
+
+.loginSignal {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.loginSignal span {
+  min-height: 72px;
+  justify-items: start;
+  padding: 13px;
+  border-color: rgba(236, 245, 255, 0.12);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent),
+    rgba(255, 255, 255, 0.035);
+  text-align: left;
+}
+
+.loginSignal span:nth-child(1) {
+  border-top-color: rgba(255, 79, 123, 0.5);
+}
+
+.loginSignal span:nth-child(2) {
+  border-top-color: rgba(255, 189, 74, 0.5);
+}
+
+.loginSignal span:nth-child(3) {
+  border-top-color: rgba(18, 230, 209, 0.5);
+}
+
+.loginField input,
+.field input,
+.field select,
+.field textarea,
+.miniInput,
+.miniSelect {
+  border-color: rgba(236, 245, 255, 0.14);
+  background: rgba(1, 5, 10, 0.58);
+  color: var(--text);
+}
+
+.loginField input:focus,
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.miniInput:focus,
+.miniSelect:focus {
+  border-color: rgba(255, 189, 74, 0.72);
+  box-shadow: 0 0 0 3px rgba(255, 189, 74, 0.14);
+}
+
+.topOpsGrid {
+  grid-template-columns: minmax(0, 1.5fr) minmax(380px, 0.72fr);
+  gap: 14px;
+}
+
+.heroConsole {
+  min-height: 410px;
+  border-color: rgba(18, 230, 209, 0.22);
+  background:
+    linear-gradient(135deg, rgba(18, 230, 209, 0.09), transparent 28%),
+    linear-gradient(180deg, rgba(6, 10, 15, 0.98), rgba(3, 6, 10, 0.98));
+}
+
+.heroConsole #consoleOutput {
+  min-height: 320px;
+  border-color: rgba(18, 230, 209, 0.18);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 25px, rgba(18, 230, 209, 0.045) 25px 26px),
+    linear-gradient(180deg, rgba(0, 5, 8, 0.96), rgba(4, 8, 13, 0.96));
+  color: #dcfff9;
+}
+
+.reliabilityPanel {
+  border-color: rgba(255, 189, 74, 0.18);
+}
+
+.reliabilityGrid article {
+  min-height: 116px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 50%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.reliabilityGrid article:nth-child(1) strong,
+.metric:nth-child(1) strong {
+  color: var(--rose);
+}
+
+.reliabilityGrid article:nth-child(2) strong,
+.metric:nth-child(2) strong {
+  color: var(--amber);
+}
+
+.reliabilityGrid article:nth-child(3) strong,
+.metric:nth-child(3) strong {
+  color: var(--lime);
+}
+
+.reliabilityGrid article:nth-child(4) strong,
+.metric:nth-child(4) strong {
+  color: var(--teal);
+}
+
+.opsNote {
+  border-color: rgba(255, 189, 74, 0.3);
+  background: linear-gradient(135deg, rgba(255, 189, 74, 0.12), rgba(255, 79, 123, 0.06));
+}
+
+.diagnosticFeed article,
+.diagnosticFeed > span {
+  border-color: rgba(255, 79, 123, 0.24);
+  background: linear-gradient(135deg, rgba(255, 79, 123, 0.12), rgba(74, 140, 255, 0.05));
+}
+
+.metricGrid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric {
+  min-height: 116px;
+}
+
+.metric::after {
+  content: "";
+  position: absolute;
+  inset: auto 12px 12px;
+  height: 2px;
+  background: linear-gradient(90deg, currentColor, transparent);
+  opacity: 0.28;
+}
+
+.commandLayout,
+.analyticsGrid,
+.taskGrid {
+  gap: 14px;
+}
+
+.runPanel {
+  border-color: rgba(184, 244, 93, 0.18);
+}
+
+.runTimer {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid rgba(184, 244, 93, 0.28);
+  border-radius: 999px;
+  background: rgba(184, 244, 93, 0.08);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.progressLine,
+.queueGauge {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progressLine span,
+.queueGauge span {
+  background: linear-gradient(90deg, var(--rose), var(--amber), var(--lime), var(--teal));
+}
+
+.progressLine span.running {
+  background: linear-gradient(90deg, var(--rose), var(--amber), var(--lime), var(--teal), var(--blue));
+  background-size: 220% 100%;
+}
+
+.processNode {
+  flex-basis: 132px;
+  min-height: 88px;
+  border-color: rgba(236, 245, 255, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+}
+
+.processNode.active {
+  border-color: rgba(255, 189, 74, 0.56);
+  background: rgba(255, 189, 74, 0.1);
+}
+
+.processNode.active i {
+  background: var(--amber);
+}
+
+.processNode.done i {
+  background: var(--lime);
+}
+
+.insight,
+.platformItem,
+.ttsVoiceCard {
+  border-color: rgba(236, 245, 255, 0.12);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.chartPanel {
+  background:
+    linear-gradient(145deg, rgba(74, 140, 255, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(15, 21, 31, 0.94), rgba(8, 12, 18, 0.92));
+}
+
+.formPanel {
+  background:
+    linear-gradient(145deg, rgba(255, 189, 74, 0.08), transparent 36%),
+    linear-gradient(180deg, rgba(15, 21, 31, 0.94), rgba(8, 12, 18, 0.92));
+}
+
+.toggleField {
+  border-color: rgba(236, 245, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.toggleField input {
+  accent-color: var(--amber);
+}
+
+.latestVideoPanel {
+  border-color: rgba(255, 79, 123, 0.18);
+}
+
+.ttsTester {
+  grid-template-columns: minmax(280px, 1fr) 190px auto;
+  align-items: end;
+}
+
+.ttsVoiceCard {
+  min-height: 78px;
+  display: grid;
+  gap: 3px;
+  align-content: center;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.ttsVoiceCard span {
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ttsVoiceCard strong {
+  color: var(--rose);
+  font-size: 16px;
+}
+
+.ttsVoiceCard small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.ttsTester audio {
+  grid-column: 1 / -1;
+}
+
+.tablePanel {
+  border-color: rgba(74, 140, 255, 0.16);
+}
+
+tbody tr:hover {
+  background: rgba(255, 189, 74, 0.055);
+}
+
+.pill {
+  border-color: rgba(236, 245, 255, 0.12);
+}
+
+@keyframes prismShift {
+  from {
+    background-position: 0 0, 0 0, 0 0;
+  }
+  to {
+    background-position: 144px 0, 0 0, 0 0;
+  }
+}
+
+@media (max-width: 1180px) {
+  .topOpsGrid,
+  .commandLayout,
+  .analyticsGrid,
+  .taskGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .metricGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ttsTester {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .appShell {
+    width: min(100% - 16px, 1680px);
+    padding-top: 12px;
+  }
+
+  .loginPanel {
+    padding: 24px;
+  }
+
+  .loginBrand h1 {
+    font-size: 30px;
+  }
+
+  .loginSignal,
+  .metricGrid,
+  .reliabilityGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroConsole {
+    min-height: 320px;
+  }
+
+  .heroConsole #consoleOutput {
+    min-height: 230px;
+  }
+}
+
+/* Quiet executive refresh */
+:root {
+  --bg: #0d0f12;
+  --bg-2: #14171c;
+  --panel: rgba(22, 25, 31, 0.92);
+  --panel-2: rgba(27, 31, 38, 0.94);
+  --panel-3: rgba(34, 38, 46, 0.94);
+  --line: rgba(231, 223, 210, 0.1);
+  --line-2: rgba(231, 223, 210, 0.18);
+  --text: #f4efe7;
+  --muted: #a8afb9;
+  --faint: #717986;
+  --teal: #8fb8a8;
+  --blue: #7e96b8;
+  --lime: #b8c986;
+  --amber: #c4a46f;
+  --rose: #c9837c;
+  --violet: #9a8fb8;
+  --teal-soft: rgba(143, 184, 168, 0.12);
+  --blue-soft: rgba(126, 150, 184, 0.13);
+  --lime-soft: rgba(184, 201, 134, 0.11);
+  --amber-soft: rgba(196, 164, 111, 0.13);
+  --rose-soft: rgba(201, 131, 124, 0.12);
+  --radius: 8px;
+  --shadow: 0 18px 54px rgba(0, 0, 0, 0.34);
+}
+
+body {
+  background:
+    linear-gradient(180deg, rgba(231, 223, 210, 0.035), transparent 320px),
+    linear-gradient(135deg, #12151a 0%, #0d0f12 48%, #111318 100%);
+}
+
+body::before,
+body::after {
+  display: none;
+}
+
+.bgLayer {
+  background-image:
+    linear-gradient(rgba(231, 223, 210, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(231, 223, 210, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(#000 0%, rgba(0, 0, 0, 0.64) 54%, transparent 100%);
+}
+
+.appShell {
+  width: min(1540px, calc(100% - 32px));
+  gap: 14px;
+  padding-top: 14px;
+}
+
+.panel,
+.metric {
+  position: relative;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+    var(--panel);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.panel::before,
+.metric::before,
+.metric::after,
+.loginPanel::before {
+  display: none;
+}
+
+.kicker {
+  color: var(--amber);
+  letter-spacing: 0.12em;
+}
+
+.appHeader {
+  top: 12px;
+  grid-template-columns: auto minmax(280px, 1fr) auto;
+  padding: 12px 14px;
+  border-color: rgba(196, 164, 111, 0.18);
+  background: rgba(16, 18, 23, 0.92);
+}
+
+.brandMark {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(196, 164, 111, 0.38);
+  border-radius: 8px;
+  background: linear-gradient(145deg, #d6c19b, #9f8052);
+  color: #17130d;
+  box-shadow: none;
+}
+
+.brandBlock h1 {
+  font-size: 18px;
+}
+
+.headerStatus {
+  justify-self: stretch;
+  min-width: 0;
+  padding: 8px 12px;
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.025);
+  text-align: left;
+}
+
+.clock,
+.runTimer {
+  color: var(--amber);
+}
+
+.toolbar .btn.isActive {
+  border-color: rgba(196, 164, 111, 0.5);
+  background: var(--amber-soft);
+  color: var(--text);
+}
+
+.btn {
+  border-radius: 8px;
+}
+
+.btn.primary {
+  background: linear-gradient(180deg, #d2b780, #a98551);
+  color: #19140d;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
+.btn.ghost {
+  border-color: var(--line-2);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.btn.ghost:hover {
+  border-color: rgba(196, 164, 111, 0.42);
+  background: rgba(196, 164, 111, 0.1);
+}
+
+.authOverlay {
+  background:
+    linear-gradient(180deg, rgba(231, 223, 210, 0.05), transparent 44%),
+    #0d0f12;
+}
+
+.loginPanel {
+  width: min(100%, 460px);
+  gap: 18px;
+  padding: 30px;
+  border: 1px solid rgba(196, 164, 111, 0.2);
+  background: rgba(22, 25, 31, 0.96);
+}
+
+.loginBrand {
+  align-items: flex-start;
+}
+
+.loginBrand .brandMark {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.loginBrand h1 {
+  margin-top: 3px;
+  color: var(--text);
+  font-size: 30px;
+  line-height: 1.08;
+}
+
+.loginBrand span:not(.brandMark) {
+  max-width: 330px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.loginSignal {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.loginSignal span {
+  min-height: 74px;
+  justify-items: start;
+  align-content: center;
+  gap: 4px;
+  padding: 12px;
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.028);
+  text-align: left;
+}
+
+.loginSignal b {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.loginSignal small {
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea,
+.miniInput,
+.miniSelect {
+  border-color: rgba(231, 223, 210, 0.16);
+  background: rgba(7, 9, 12, 0.46);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.miniInput:focus,
+.miniSelect:focus {
+  border-color: rgba(196, 164, 111, 0.65);
+  box-shadow: 0 0 0 3px rgba(196, 164, 111, 0.12);
+}
+
+.topOpsGrid {
+  grid-template-columns: minmax(0, 1.42fr) minmax(360px, 0.72fr);
+  gap: 14px;
+}
+
+.heroConsole {
+  min-height: 380px;
+  border-color: rgba(143, 184, 168, 0.16);
+  background:
+    linear-gradient(180deg, rgba(20, 24, 30, 0.96), rgba(11, 13, 17, 0.96));
+}
+
+.heroConsole #consoleOutput {
+  min-height: 300px;
+  max-height: 460px;
+  border-color: rgba(231, 223, 210, 0.1);
+  background: #090b0e;
+  color: #d7e0dc;
+}
+
+.reliabilityPanel {
+  border-color: rgba(196, 164, 111, 0.14);
+}
+
+.reliabilityGrid {
+  gap: 8px;
+}
+
+.reliabilityGrid article,
+.insight,
+.platformItem,
+.ttsVoiceCard {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.028);
+}
+
+.reliabilityGrid article {
+  min-height: 98px;
+}
+
+.reliabilityGrid strong,
+.metric strong {
+  color: var(--text);
+}
+
+.reliabilityGrid article:nth-child(1) strong,
+.metric:nth-child(1) strong {
+  color: var(--amber);
+}
+
+.reliabilityGrid article:nth-child(2) strong,
+.metric:nth-child(2) strong {
+  color: var(--blue);
+}
+
+.reliabilityGrid article:nth-child(3) strong,
+.metric:nth-child(3) strong {
+  color: var(--teal);
+}
+
+.reliabilityGrid article:nth-child(4) strong,
+.metric:nth-child(4) strong {
+  color: var(--lime);
+}
+
+.opsNote,
+.diagnosticFeed article,
+.diagnosticFeed > span {
+  border-color: rgba(196, 164, 111, 0.16);
+  background: rgba(196, 164, 111, 0.055);
+}
+
+.metricGrid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metric {
+  min-height: 104px;
+  padding: 14px;
+}
+
+.metric span,
+.reliabilityGrid span,
+.ttsVoiceCard span {
+  letter-spacing: 0.1em;
+}
+
+.commandLayout,
+.analyticsGrid,
+.taskGrid {
+  gap: 14px;
+}
+
+.progressLine,
+.queueGauge {
+  height: 8px;
+  background: rgba(231, 223, 210, 0.08);
+}
+
+.progressLine span,
+.queueGauge span,
+.progressLine span.running {
+  background: linear-gradient(90deg, var(--amber), var(--teal));
+}
+
+.runTimer {
+  min-height: 26px;
+  border-color: rgba(196, 164, 111, 0.25);
+  background: rgba(196, 164, 111, 0.09);
+  color: var(--amber);
+}
+
+.processNode {
+  flex-basis: 124px;
+  min-height: 82px;
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.026);
+}
+
+.processNode.active {
+  border-color: rgba(196, 164, 111, 0.42);
+  background: var(--amber-soft);
+}
+
+.processNode.done {
+  border-color: rgba(143, 184, 168, 0.38);
+  background: var(--teal-soft);
+}
+
+.processNode.active i {
+  background: var(--amber);
+}
+
+.processNode.done i {
+  background: var(--teal);
+}
+
+.chartPanel,
+.formPanel,
+.tablePanel,
+.latestVideoPanel,
+.ttsPanel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    var(--panel);
+}
+
+.toggleField {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.toggleField input {
+  accent-color: var(--amber);
+}
+
+.monitorGrid {
+  grid-template-columns: 1fr;
+}
+
+.tablePanel {
+  border-color: rgba(126, 150, 184, 0.15);
+}
+
+.tableWrap {
+  border: 1px solid rgba(231, 223, 210, 0.07);
+  border-radius: 8px;
+  background: rgba(8, 10, 13, 0.22);
+}
+
+th {
+  color: var(--faint);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+tbody tr:hover {
+  background: rgba(196, 164, 111, 0.055);
+}
+
+.moreBtn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.ttsTester {
+  grid-template-columns: minmax(280px, 1fr) 190px auto;
+}
+
+.ttsVoiceCard strong {
+  color: var(--amber);
+}
+
+body.focusMode .taskGrid,
+body.focusMode .latestVideoPanel,
+body.focusMode .ttsPanel {
+  display: none;
+}
+
+body.focusMode .analyticsGrid {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.8fr) minmax(300px, 0.8fr);
+}
+
+@media (max-width: 1180px) {
+  .topOpsGrid,
+  .commandLayout,
+  .analyticsGrid,
+  .taskGrid,
+  body.focusMode .analyticsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .metricGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .appShell {
+    width: min(100% - 16px, 1540px);
+    padding-top: 10px;
+  }
+
+  .appHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .headerStatus {
+    text-align: left;
+  }
+
+  .loginPanel {
+    padding: 22px;
+  }
+
+  .loginBrand h1 {
+    font-size: 26px;
+  }
+
+  .loginSignal,
+  .metricGrid,
+  .reliabilityGrid,
+  .ttsTester {
+    grid-template-columns: 1fr;
+  }
+
+  .heroConsole {
+    min-height: 310px;
+  }
+
+  .heroConsole #consoleOutput {
+    min-height: 220px;
+  }
+}

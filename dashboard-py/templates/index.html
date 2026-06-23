@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Lokal — Clipper</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">CL</span>
+        <div>
+          <h1>Clipper Dashboard</h1>
+          <small>Local Control Center</small>
+        </div>
+      </div>
+      <nav class="tabs">
+        <button class="tab active" data-tab="overview">Overview</button>
+        <button class="tab" data-tab="queue">Queue</button>
+        <button class="tab" data-tab="jobs">Jobs</button>
+        <button class="tab" data-tab="history">History</button>
+        <button class="tab" data-tab="runner">Runner</button>
+        <button class="tab" data-tab="settings">Settings</button>
+        <button class="tab" data-tab="logs">Logs</button>
+      </nav>
+      <div class="meta">
+        <span id="clock">--:--</span>
+        <button id="refreshBtn" class="btn ghost">Refresh</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- OVERVIEW -->
+      <section id="overview" class="tab-panel active">
+        <div class="grid metrics" id="metrics"></div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h3>Trend 7 Hari</h3><span id="trendTotal" class="badge">0</span></div>
+            <div class="chart-wrap">
+              <svg id="trendChart" viewBox="0 0 640 240" preserveAspectRatio="none"></svg>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Status Sistem</h3><span id="systemBadge" class="badge">local</span></div>
+            <ul class="kv-list" id="systemStatus"></ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Aktivitas Terbaru</h3></div>
+          <div class="table-wrap"><table><thead><tr><th>Waktu</th><th>Job</th><th>Status</th><th>FB</th><th>IG</th><th>YT</th><th>TT</th><th>TH</th></tr></thead><tbody id="recentActivity"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- QUEUE -->
+      <section id="queue" class="tab-panel">
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h3>Tambah Video ke Queue</h3></div>
+            <form id="addVideoForm" class="form">
+              <label>
+                <span>YouTube URL</span>
+                <input name="url" type="url" placeholder="https://www.youtube.com/watch?v=..." required>
+              </label>
+              <label>
+                <span>Theme</span>
+                <input name="theme" value="podcast artis">
+              </label>
+              <label>
+                <span>Target Date</span>
+                <input name="target_date" type="date">
+              </label>
+              <label>
+                <span>Catatan</span>
+                <input name="notes" placeholder="Opsional">
+              </label>
+              <button type="submit" class="btn primary">Tambahkan</button>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Statistik Queue</h3></div>
+            <ul class="kv-list" id="queueStats"></ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Daftar Queue</h3></div>
+          <div class="table-wrap"><table><thead><tr><th>URL</th><th>Theme</th><th>Target</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="queueRows"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- JOBS -->
+      <section id="jobs" class="tab-panel">
+        <div class="card toolbar-card">
+          <input id="jobSearch" placeholder="Cari job...">
+          <select id="jobStatusFilter">
+            <option value="">Semua status</option>
+            <option value="published">published</option>
+            <option value="failed">failed</option>
+            <option value="ready">ready_to_publish</option>
+            <option value="queued">queued</option>
+            <option value="processing">processing</option>
+          </select>
+          <button id="jobFilterBtn" class="btn">Filter</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap"><table><thead><tr><th>Job ID</th><th>Judul</th><th>Status</th><th>Clipper</th><th>Caption</th><th>Thumbnail</th><th>Publish</th><th>Aksi</th></tr></thead><tbody id="jobRows"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- HISTORY -->
+      <section id="history" class="tab-panel">
+        <div class="card">
+          <div class="card-head"><h3>Riwayat Publish</h3></div>
+          <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Judul</th><th>Status</th><th>YT</th><th>FB</th><th>IG</th><th>TT</th><th>TH</th></tr></thead><tbody id="historyRows"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- RUNNER -->
+      <section id="runner" class="tab-panel">
+        <div class="card">
+          <div class="card-head"><h3>Workflow Generator → Upload</h3><span class="badge">Clipper • Caption • Thumbnail • Storage • Publish</span></div>
+          <form id="workflowForm" class="form">
+            <div class="form-grid">
+              <label class="wide">
+                <span>YouTube URL (kosong = ambil dari queue)</span>
+                <input name="url" type="url" placeholder="https://www.youtube.com/watch?v=...">
+              </label>
+              <label>
+                <span>Theme</span>
+                <input name="theme" value="podcast artis">
+              </label>
+              <label>
+                <span>Range (opsional)</span>
+                <input name="range" placeholder="00:01:20-00:02:05">
+              </label>
+              <label>
+                <span>Kualitas</span>
+                <select name="quality_profile">
+                  <option value="standard" selected>Standard</option>
+                  <option value="fast">Fast</option>
+                  <option value="high">High</option>
+                  <option value="ultra">Ultra</option>
+                </select>
+              </label>
+              <label>
+                <span>Jumlah Clip</span>
+                <input name="clip_count" type="number" min="1" max="10" value="1">
+              </label>
+              <label class="toggleField">
+                <input name="use_frame" type="checkbox" checked>
+                <span>Frame</span>
+              </label>
+              <label class="toggleField">
+                <input name="use_filter" type="checkbox" checked>
+                <span>Filter</span>
+              </label>
+              <label class="toggleField">
+                <input name="use_watermark" type="checkbox">
+                <span>Watermark</span>
+              </label>
+              <label class="toggleField">
+                <input name="use_subtitle_highlight" type="checkbox" checked>
+                <span>Subtitle highlight + emoji</span>
+              </label>
+              <label class="toggleField">
+                <input name="publish" type="checkbox" checked>
+                <span>Publish ke platform</span>
+              </label>
+              <label class="toggleField">
+                <input name="dry_run" type="checkbox">
+                <span>Dry-run (tidak publish)</span>
+              </label>
+            </div>
+            <button type="submit" class="btn primary">Mulai Workflow</button>
+          </form>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h3>Perintah NPM Cepat</h3></div>
+            <div class="run-buttons">
+              <button class="btn primary" data-cmd="check">npm run check</button>
+              <button class="btn" data-cmd="dry-run">npm run dry-run</button>
+              <button class="btn" data-cmd="run">npm run run</button>
+              <button class="btn" data-cmd="publish-ready">npm run publish:ready</button>
+              <button class="btn ghost" data-cmd="videos-discover">videos:discover</button>
+              <button class="btn ghost" data-cmd="youtube-check">youtube:check</button>
+              <button class="btn ghost" data-cmd="instagram-check">instagram:check</button>
+              <button class="btn ghost" data-cmd="scheduler">scheduler</button>
+            </div>
+            <p class="hint">Perintah dijalankan di background. Output muncul di bawah.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Preflight Cepat</h3><button id="preflightBtn" class="btn small">Jalankan Check</button></div>
+            <pre id="preflightOutput" class="console small">Belum dijalankan.</pre>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Live Console</h3>
+            <div>
+              <span id="consoleCmd" class="badge">idle</span>
+              <button id="stopConsoleBtn" class="btn danger small">Stop</button>
+              <button id="clearConsoleBtn" class="btn ghost small">Clear</button>
+            </div>
+          </div>
+          <pre id="consoleOutput" class="console">Belum ada proses yang berjalan.</pre>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="settings" class="tab-panel">
+        <div class="card">
+          <div class="card-head"><h3>Konfigurasi .env</h3><button id="saveSettingsBtn" class="btn primary">Simpan Perubahan</button></div>
+          <p class="hint">Kunci sensitif ditampilkan sebagian. Perubahan langsung menulis ke file <code>.env</code> lokal.</p>
+          <div id="settingsForm" class="settings-grid"></div>
+        </div>
+      </section>
+
+      <!-- LOGS -->
+      <section id="logs" class="tab-panel">
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h3>File Log</h3></div>
+            <ul id="logList" class="link-list"></ul>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Isi Log</h3><span id="logName" class="badge">-</span></div>
+            <pre id="logContent" class="console">Pilih file log di sebelah kiri.</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.tab-panel');
+    let state = {};
+    let activeConsoleCmd = null;
+    let consolePoll = null;
+
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      panels.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.tab).classList.add('active');
+      if (t.dataset.tab === 'logs') loadLogs();
+    }));
+
+    async function api(path, opts = {}) {
+      const r = await fetch(path, opts);
+      const data = await r.json().catch(() => ({ error: 'JSON invalid' }));
+      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+      return data;
+    }
+
+    function toast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + type;
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function formatDate(s) {
+      if (!s) return '-';
+      const d = new Date(s);
+      return isNaN(d) ? s : d.toLocaleString('id-ID');
+    }
+
+    function todayInput() {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    async function refresh() {
+      try {
+        state = await api('/api/state');
+        renderOverview();
+        renderQueue();
+        renderJobs();
+        renderHistory();
+      } catch (e) {
+        toast(e.message, 'error');
+      }
+    }
+
+    function renderOverview() {
+      const s = state.stats;
+      document.getElementById('metrics').innerHTML = `
+        <div class="metric"><span>Queue Aktif</span><strong>${s.videos_queued}</strong></div>
+        <div class="metric"><span>Jobs Total</span><strong>${s.jobs_total}</strong></div>
+        <div class="metric"><span>Published</span><strong>${s.jobs_published}</strong></div>
+        <div class="metric"><span>Failed</span><strong class="text-warn">${s.jobs_failed}</strong></div>
+        <div class="metric"><span>Ready to Publish</span><strong>${s.jobs_ready}</strong></div>
+        <div class="metric"><span>Publish Hari Ini</span><strong>${s.today_published}</strong></div>
+      `;
+      document.getElementById('trendTotal').textContent = s.total7 + ' / 7d';
+      renderTrendChart(s.series7);
+      document.getElementById('systemStatus').innerHTML = `
+        <li><span>Mode</span><b>${s.dry_run ? 'DRY RUN' : 'LIVE'}</b></li>
+        <li><span>Auto Publish</span><b>${s.auto_publish ? 'ON' : 'OFF'}</b></li>
+        <li><span>Upload Driver</span><b>${s.upload_driver}</b></li>
+        <li><span>AI Provider</span><b>${s.ai_provider}</b></li>
+        <li><span>Timezone</span><b>${s.timezone}</b></li>
+        <li><span>Remote Repo</span><b>offline / lokal</b></li>
+      `;
+      const recent = [...(state.jobs || [])].sort((a,b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0)).slice(0, 8);
+      document.getElementById('recentActivity').innerHTML = recent.map(j => `
+        <tr>
+          <td>${formatDate(j.updated_at)}</td>
+          <td title="${escapeHtml(j.source_url || '')}">${escapeHtml((j.source_title || j.job_id || '').slice(0, 55))}</td>
+          <td><span class="tag ${j.status}">${j.status}</span></td>
+          <td>${j.facebook_video_id || j.facebook_post_id || j.facebook_url ? 'FB' : '-'}</td>
+          <td>${j.instagram_media_id ? 'IG' : '-'}</td>
+          <td>${j.youtube_url ? `<a href="${j.youtube_url}" target="_blank">YT</a>` : '-'}</td>
+          <td>${j.tiktok_publish_id ? 'TT' : '-'}</td>
+          <td>${j.threads_media_id ? 'TH' : '-'}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="8" class="empty">Belum ada aktivitas</td></tr>';
+    }
+
+    function renderTrendChart(series) {
+      const svg = document.getElementById('trendChart');
+      if (!series?.length) { svg.innerHTML = ''; return; }
+      const W = 640, H = 240, pad = 32;
+      const max = Math.max(1, ...series.map(d => d.published));
+      const step = (W - pad * 2) / (series.length - 1);
+      const pts = series.map((d, i) => {
+        const x = pad + i * step;
+        const y = H - pad - (d.published / max) * (H - pad * 2);
+        return { x, y, ...d };
+      });
+      const line = pts.map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+      const area = `${line} L ${pts.at(-1).x} ${H - pad} L ${pad} ${H - pad} Z`;
+      const dots = pts.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" />`).join('');
+      const labels = pts.map(p => `<text x="${p.x.toFixed(1)}" y="${H - 10}" text-anchor="middle" font-size="11">${p.date.slice(5)}</text>`).join('');
+      svg.innerHTML = `<path class="chart-area" d="${area}" /><path class="chart-line" d="${line}" />${dots}${labels}`;
+    }
+
+    function renderQueue() {
+      const vids = state.videos || [];
+      document.getElementById('queueStats').innerHTML = `
+        <li><span>Total</span><b>${state.stats.videos_total}</b></li>
+        <li><span>Aktif</span><b>${state.stats.videos_active}</b></li>
+        <li><span>Queued</span><b>${state.stats.videos_queued}</b></li>
+        <li><span>Expired</span><b>${state.stats.videos_expired}</b></li>
+      `;
+      document.querySelector('input[name="target_date"]').value = todayInput();
+      document.getElementById('queueRows').innerHTML = vids.map(v => `
+        <tr>
+          <td><a href="${escapeHtml(v.url)}" target="_blank">${escapeHtml(v.url.slice(0, 70))}</a></td>
+          <td>${escapeHtml(v.theme)}</td>
+          <td>${v.target_date || '-'}</td>
+          <td><span class="tag ${v.status}">${v.status}</span></td>
+          <td>
+            <button class="btn small" onclick="setVideoStatus('${v.id}', 'queued')">queue</button>
+            <button class="btn small" onclick="setVideoStatus('${v.id}', 'expired')">expire</button>
+            <button class="btn danger small" onclick="deleteVideo('${v.id}')">hapus</button>
+          </td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" class="empty">Queue kosong</td></tr>';
+    }
+
+    async function setVideoStatus(id, status) {
+      await api(`/api/videos/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({status}) });
+      toast('Status diperbarui'); await refresh();
+    }
+    async function deleteVideo(id) {
+      if (!confirm('Hapus video dari queue?')) return;
+      await api(`/api/videos/${id}`, { method: 'DELETE' });
+      toast('Video dihapus'); await refresh();
+    }
+
+    async function loadJobs() {
+      const q = document.getElementById('jobSearch').value;
+      const status = document.getElementById('jobStatusFilter').value;
+      const url = '/api/jobs' + (q || status ? `?${new URLSearchParams({q, status})}` : '');
+      const jobs = await api(url);
+      document.getElementById('jobRows').innerHTML = jobs.map(j => `
+        <tr>
+          <td><code>${j.job_id}</code></td>
+          <td title="${escapeHtml(j.source_url || '')}">${escapeHtml((j.source_title || '-').slice(0, 50))}</td>
+          <td><span class="tag ${j.status}">${j.status}</span></td>
+          <td><span class="tag ${j.clipper_status}">${j.clipper_status}</span></td>
+          <td><span class="tag ${j.caption_status}">${j.caption_status}</span></td>
+          <td><span class="tag ${j.thumbnail_status}">${j.thumbnail_status}</span></td>
+          <td><span class="tag ${j.publish_status}">${j.publish_status}</span></td>
+          <td>
+            ${j.status === 'failed' || j.status === 'ready_to_publish' ? `<button class="btn small" onclick="retryJob('${j.job_id}')">retry</button>` : ''}
+            <button class="btn ghost small" onclick="showJobDetail('${j.job_id}')">detail</button>
+          </td>
+        </tr>
+      `).join('') || '<tr><td colspan="8" class="empty">Tidak ada job</td></tr>';
+    }
+
+    function renderJobs() { loadJobs(); }
+    async function retryJob(id) {
+      await api(`/api/jobs/${id}/retry`, { method: 'POST' });
+      toast('Job di-retry'); await refresh();
+    }
+    function showJobDetail(id) {
+      const j = state.jobs.find(x => x.job_id === id);
+      if (!j) return;
+      const detail = Object.entries(j).map(([k,v]) => `<li><span>${k}</span><b>${typeof v === 'object' ? JSON.stringify(v).slice(0,200) : escapeHtml(String(v)).slice(0,200)}</b></li>`).join('');
+      const win = window.open('', '_blank', 'width=700,height=600');
+      win.document.write(`<html><head><title>Job ${id}</title><style>body{font-family:system-ui;background:#0b0d10;color:#e2e8f0;padding:20px}li{display:flex;gap:10px;border-bottom:1px solid #1f2937;padding:6px 0}span{opacity:.7;min-width:180px}b{word-break:break-all}</style></head><body><h2>${id}</h2><ul>${detail}</ul></body></html>`);
+    }
+
+    function renderHistory() {
+      const h = [...(state.history || [])].sort((a, b) => {
+        const da = new Date(b.published_at || b.recorded_at || b.publish_date || 0);
+        const db = new Date(a.published_at || a.recorded_at || a.publish_date || 0);
+        return da - db;
+      });
+      document.getElementById('historyRows').innerHTML = h.slice(0, 100).map(x => `
+        <tr>
+          <td>${x.publish_date || '-'}</td>
+          <td title="${escapeHtml(x.source_url || '')}">${escapeHtml((x.caption || x.job_id || '').slice(0, 55))}</td>
+          <td><span class="tag ${x.status}">${x.status}</span></td>
+          <td>${x.youtube_url ? `<a href="${x.youtube_url}" target="_blank">link</a>` : '-'}</td>
+          <td>${x.facebook_video_id || x.facebook_post_id || x.facebook_url ? '✓' : '-'}</td>
+          <td>${x.instagram_media_id ? '✓' : '-'}</td>
+          <td>${x.tiktok_publish_id ? '✓' : '-'}</td>
+          <td>${x.threads_media_id ? '✓' : '-'}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="8" class="empty">Belum ada riwayat</td></tr>';
+    }
+
+    document.getElementById('addVideoForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      await api('/api/videos', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+      toast('Video ditambahkan'); e.target.reset(); await refresh();
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', refresh);
+    document.getElementById('jobFilterBtn').addEventListener('click', loadJobs);
+
+    // Runner
+    document.querySelectorAll('.run-buttons button[data-cmd]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const cmd = btn.dataset.cmd;
+        try {
+          await api(`/api/run/${cmd}`, { method: 'POST' });
+          activeConsoleCmd = cmd;
+          document.getElementById('consoleCmd').textContent = cmd;
+          startConsolePoll(cmd);
+          toast(`Menjalankan ${cmd}`);
+        } catch (e) { toast(e.message, 'error'); }
+      });
+    });
+
+    document.getElementById('workflowForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = {
+        url: fd.get('url') || '',
+        theme: fd.get('theme') || 'podcast artis',
+        range: fd.get('range') || '',
+        quality_profile: fd.get('quality_profile') || 'standard',
+        clip_count: Number(fd.get('clip_count') || 1),
+        use_frame: fd.get('use_frame') === 'on',
+        use_filter: fd.get('use_filter') === 'on',
+        use_watermark: fd.get('use_watermark') === 'on',
+        use_subtitle_highlight: fd.get('use_subtitle_highlight') === 'on',
+        dry_run: fd.get('dry_run') === 'on',
+        publish: fd.get('publish') === 'on',
+      };
+      try {
+        await api('/api/run/workflow', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        activeConsoleCmd = 'workflow';
+        document.getElementById('consoleCmd').textContent = 'workflow';
+        startConsolePoll('workflow');
+        toast('Workflow dimulai');
+      } catch (err) { toast(err.message, 'error'); }
+    });
+
+    function startConsolePoll(cmd) {
+      if (consolePoll) clearInterval(consolePoll);
+      consolePoll = setInterval(async () => {
+        const data = await api(`/api/run/${cmd}/status`);
+        const out = document.getElementById('consoleOutput');
+        out.textContent = data.log?.join('\n') || 'Menunggu output...';
+        out.scrollTop = out.scrollHeight;
+        if (!data.running) {
+          clearInterval(consolePoll);
+          consolePoll = null;
+        }
+      }, 1000);
+    }
+
+    document.getElementById('stopConsoleBtn').addEventListener('click', async () => {
+      if (!activeConsoleCmd) return;
+      await api(`/api/run/${activeConsoleCmd}/stop`, { method: 'POST' });
+      toast('Proses dihentikan');
+    });
+    document.getElementById('clearConsoleBtn').addEventListener('click', () => {
+      document.getElementById('consoleOutput').textContent = '';
+    });
+
+    document.getElementById('preflightBtn').addEventListener('click', async () => {
+      const out = document.getElementById('preflightOutput');
+      out.textContent = 'Menjalankan preflight...';
+      try {
+        const data = await api('/api/preflight', { method: 'POST' });
+        out.textContent = [...data.stdout, ...data.stderr].join('\n') || 'Selesai.';
+      } catch (e) { out.textContent = e.message; }
+    });
+
+    // Settings
+    async function loadSettings() {
+      const data = await api('/api/settings');
+      const form = document.getElementById('settingsForm');
+      form.innerHTML = Object.entries(data.masked).map(([k, v]) => `
+        <label data-key="${k}">
+          <span>${k}</span>
+          <input name="${k}" value="${escapeHtml(v)}" ${data.sensitive_keys.includes(k) ? 'type="password"' : ''}>
+        </label>
+      `).join('');
+    }
+    document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+      const updates = {};
+      document.querySelectorAll('#settingsForm label').forEach(lbl => {
+        const k = lbl.dataset.key;
+        const v = lbl.querySelector('input').value;
+        updates[k] = v;
+      });
+      await api('/api/settings', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({updates}) });
+      toast('Settings disimpan'); loadSettings();
+    });
+
+    // Logs
+    async function loadLogs() {
+      const files = await api('/api/logs');
+      document.getElementById('logList').innerHTML = files.map(f => `
+        <li><button class="link" onclick="loadLog('${f.path}')">${f.name}</button></li>
+      `).join('') || '<li>Tidak ada log</li>';
+    }
+    window.loadLog = async function(name) {
+      const data = await api('/api/logs/' + encodeURIComponent(name));
+      document.getElementById('logName').textContent = data.name;
+      document.getElementById('logContent').textContent = data.lines.join('\n');
+    };
+
+    // Clock
+    setInterval(() => {
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString('id-ID');
+    }, 1000);
+
+    // Init
+    loadSettings();
+    refresh();
+    setInterval(refresh, 10000);
+  </script>
+</body>
+</html>

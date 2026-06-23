@@ -1,0 +1,17 @@
+.env
+.env.*
+*.env
+node_modules
+generated
+data/*.json
+cookies.txt
+clipper/cookies.txt
+clipper/.env
+clipper/input
+clipper/downloads
+clipper/temp
+clipper/clips
+clipper/output
+npm-debug.log*
+*.log
+*.zip

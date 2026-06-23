@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 60 node src/instagram-token-fastcheck.js)",
+      "Bash(timeout 60 node src/facebook-token-fastcheck.js)",
+      "Bash(timeout 60 node src/threads-token-fastcheck.js)",
+      "Bash(timeout 120 node -e \"import\\('./src/state-sync.js'\\).then\\(async m => { const r = await m.downloadStateFromRemote\\(\\); console.log\\(JSON.stringify\\(r\\)\\); }\\)\")"
+    ]
+  }
+}
