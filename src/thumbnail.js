@@ -16,7 +16,7 @@ const MAX_TITLE_LINES = 4;
 const MAX_TITLE_WORDS = 16;
 const DEFAULT_TITLE_TEXT = "BAGIAN INI BIKIN PENONTON BERHENTI SCROLL";
 const FONT_SIZE_MAX = 74;
-const FONT_SIZE_MIN = 34;
+const FONT_SIZE_MIN = 22;
 const CHAR_WIDTH_RATIO = 0.62;
 const TEXT_COLOR = process.env.THUMBNAIL_TEXT_COLOR || "0xFFD60A";
 const BORDER_COLOR = process.env.THUMBNAIL_BORDER_COLOR || "0xFFD60A";
@@ -373,13 +373,16 @@ function buildTitleLayout(value) {
 
   while (fontSize >= FONT_SIZE_MIN) {
     const maxChars = Math.max(10, Math.floor(textAreaW / (fontSize * CHAR_WIDTH_RATIO)));
-    lines = wrapText(title, maxChars, MAX_TITLE_LINES);
+    // Bungkus natural (maxLines besar) supaya judul tidak dipotong "..."; cukup
+    // kecilkan font sampai muat penuh dalam maksimal MAX_TITLE_LINES baris.
+    lines = wrapText(title, maxChars, 99);
     const textBlockH = estimateTextBlockHeight(lines.length, fontSize);
     const widthOk = lines.every((line) => estimateTextWidth(line, fontSize) <= textAreaW);
     const heightOk = (textBlockH + BOX_PADDING_Y * 2) <= BOX_MAX_HEIGHT;
-    if (widthOk && heightOk) break;
+    if (lines.length <= MAX_TITLE_LINES && widthOk && heightOk) break;
     fontSize -= 2;
   }
+  if (lines.length > MAX_TITLE_LINES) lines = lines.slice(0, MAX_TITLE_LINES);
 
   if (!lines.length) lines = ["BAGIAN INI BIKIN", "PENONTON BERHENTI SCROLL"];
   const textBlockH = estimateTextBlockHeight(lines.length, fontSize);

@@ -216,24 +216,27 @@ def wrap_text(draw, text, font, max_width, max_lines=2):
     return kept
 
 
-def fit_title_layout(draw, title, rect, max_width, max_size=92, min_size=34, vertical_padding=70):
+def fit_title_layout(draw, title, rect, max_width, max_size=92, min_size=22, vertical_padding=70):
     max_height = (rect[3] - rect[1]) - vertical_padding
-    for max_lines in (4, 3):
-        size = max_size
-        while size >= min_size:
-            font = load_font(size)
-            lines = wrap_text(draw, title, font, max_width, max_lines=max_lines)
-            line_gap = max(8, int(size * 0.14))
-            heights = [text_size(draw, line, font, 4)[1] for line in lines]
-            total_h = sum(heights) + line_gap * (len(lines) - 1)
-            width_ok = all(text_size(draw, line, font, 4)[0] <= max_width for line in lines)
-            if width_ok and total_h <= max_height:
-                return lines, font, size, line_gap, heights, total_h
-            size -= 2
+    # Tampilkan judul UTUH dalam maksimal 4 baris. Kecilkan font dari besar ke
+    # kecil; pakai font terbesar yang membuat judul muat penuh (tanpa "...").
+    # max_lines=99 => wrap_text tidak memotong, hanya membungkus secara natural.
+    size = max_size
+    while size >= min_size:
+        font = load_font(size)
+        lines = wrap_text(draw, title, font, max_width, max_lines=99)
+        line_gap = max(8, int(size * 0.14))
+        heights = [text_size(draw, line, font, 4)[1] for line in lines]
+        total_h = sum(heights) + line_gap * (len(lines) - 1)
+        width_ok = all(text_size(draw, line, font, 4)[0] <= max_width for line in lines)
+        if len(lines) <= 4 and width_ok and total_h <= max_height:
+            return lines, font, size, line_gap, heights, total_h
+        size -= 2
 
+    # Jalan terakhir: font terkecil, judul utuh dipaksa ke maksimal 4 baris
+    # (tetap tanpa "..."), terima jika sedikit padat.
     font = load_font(min_size)
-    lines = wrap_text(draw, title, font, max_width, max_lines=4)
-    lines = [ellipsize_to_width(draw, line, font, max_width) for line in lines]
+    lines = wrap_text(draw, title, font, max_width, max_lines=99)[:4]
     line_gap = 8
     heights = [text_size(draw, line, font, 4)[1] for line in lines]
     total_h = sum(heights) + line_gap * (len(lines) - 1)
