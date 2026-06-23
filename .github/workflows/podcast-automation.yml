@@ -242,8 +242,9 @@ jobs:
       INSTAGRAM_CONTAINER_MAX_ATTEMPTS: ${{ secrets.INSTAGRAM_CONTAINER_MAX_ATTEMPTS || '90' }}
       TOKEN_REFRESH_BEFORE_DAYS: ${{ secrets.TOKEN_REFRESH_BEFORE_DAYS || '10' }}
       AUTO_DISCOVER_VIDEOS: ${{ secrets.AUTO_DISCOVER_VIDEOS || 'true' }}
-      AUTO_DISCOVER_QUERY: ${{ secrets.AUTO_DISCOVER_QUERY || 'motivasi hidup bahasa indonesia|ceramah motivasi indonesia|motivasi sukses bahasa indonesia|motivasi pagi bahasa indonesia|motivator indonesia terbaru|motivasi pantang menyerah indonesia|nasihat kehidupan indonesia|motivasi bangkit dari kegagalan|motivasi kerja keras indonesia|renungan kehidupan indonesia' }}
-      AUTO_DISCOVER_DAILY_QUERY: ${{ secrets.AUTO_DISCOVER_DAILY_QUERY || 'motivasi hidup indonesia hari ini' }}
+      AUTO_DISCOVER_QUERY: ${{ secrets.AUTO_DISCOVER_QUERY || 'podcast artis indonesia terbaru|podcast artis indonesia viral|podcast musisi indonesia terbaru|podcast deddy corbuzier terbaru|podcast vindes terbaru|podcast raditya dika terbaru|podcast selebriti indonesia terbaru|motivasi hidup bahasa indonesia|ceramah motivasi indonesia|motivator indonesia terbaru' }}
+      AUTO_DISCOVER_DAILY_QUERY: ${{ secrets.AUTO_DISCOVER_DAILY_QUERY || 'podcast artis indonesia viral hari ini' }}
+      AUTO_DISCOVER_PODCAST_RATIO: ${{ vars.AUTO_DISCOVER_PODCAST_RATIO || secrets.AUTO_DISCOVER_PODCAST_RATIO || '0.7' }}
       AUTO_DISCOVER_USE_API: ${{ secrets.AUTO_DISCOVER_USE_API || 'false' }}
       AUTO_DISCOVER_CHANNEL_ONLY: ${{ vars.AUTO_DISCOVER_CHANNEL_ONLY || secrets.AUTO_DISCOVER_CHANNEL_ONLY || 'false' }}
       AUTO_DISCOVER_ALLOW_OAUTH: ${{ secrets.AUTO_DISCOVER_ALLOW_OAUTH || 'false' }}
@@ -261,7 +262,7 @@ jobs:
       AUTO_DISCOVER_EXPIRE_OLD_QUEUE: ${{ secrets.AUTO_DISCOVER_EXPIRE_OLD_QUEUE || 'true' }}
       AUTO_DISCOVER_QUEUE_TTL_DAYS: ${{ secrets.AUTO_DISCOVER_QUEUE_TTL_DAYS || '1' }}
       AUTO_DISCOVER_MIN_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MIN_DURATION_SECONDS || '180' }}
-      AUTO_DISCOVER_MAX_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MAX_DURATION_SECONDS || '1800' }}
+      AUTO_DISCOVER_MAX_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MAX_DURATION_SECONDS || '10800' }}
       AUTO_DISCOVER_MIN_VIEWS: ${{ vars.AUTO_DISCOVER_MIN_VIEWS || secrets.AUTO_DISCOVER_MIN_VIEWS || '0' }}
       AUTO_DISCOVER_MIN_VIEWS_PER_HOUR: ${{ vars.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || secrets.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || '0' }}
       AUTO_DISCOVER_PUBLISHED_AFTER_DAYS: ${{ vars.AUTO_DISCOVER_PUBLISHED_AFTER_DAYS || secrets.AUTO_DISCOVER_PUBLISHED_AFTER_DAYS || '30' }}
@@ -270,7 +271,7 @@ jobs:
       AUTO_DISCOVER_RELEVANCE_LANGUAGE: ${{ secrets.AUTO_DISCOVER_RELEVANCE_LANGUAGE || 'id' }}
       AUTO_DISCOVER_BLOCKED_CHANNELS: ${{ vars.AUTO_DISCOVER_BLOCKED_CHANNELS || secrets.AUTO_DISCOVER_BLOCKED_CHANNELS || 'Taulany TV|@taulanytv' }}
       AUTO_DISCOVER_CHANNEL_IDS: ${{ secrets.AUTO_DISCOVER_CHANNEL_IDS }}
-      AUTO_DISCOVER_CHANNEL_HANDLES: ${{ secrets.AUTO_DISCOVER_CHANNEL_HANDLES || '' }}
+      AUTO_DISCOVER_CHANNEL_HANDLES: ${{ secrets.AUTO_DISCOVER_CHANNEL_HANDLES || '@corbuzier|@VINDES|@radityadika|@DanielManantaNetwork|@HASCreative|@podkesmas|@podhub|@Kasisolusi' }}
       AUTO_DISCOVER_FRESH_UPLOAD_DAYS: ${{ vars.AUTO_DISCOVER_FRESH_UPLOAD_DAYS || secrets.AUTO_DISCOVER_FRESH_UPLOAD_DAYS || '30' }}
       AUTO_DISCOVER_CHANNEL_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || secrets.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || '10' }}
 

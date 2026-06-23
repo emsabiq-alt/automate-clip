@@ -19,39 +19,58 @@ import {
   storedQueueSeriesSuccessCount
 } from "./queue-policy.js";
 
+// Campuran: mayoritas podcast artis (70%) + sebagian motivasi (30%).
 const DEFAULT_QUERIES = [
+  "podcast artis indonesia terbaru",
+  "podcast artis indonesia viral",
+  "podcast musisi indonesia terbaru",
+  "podcast deddy corbuzier terbaru",
+  "podcast vindes terbaru",
+  "podcast raditya dika terbaru",
+  "podcast selebriti indonesia terbaru",
   "motivasi hidup bahasa indonesia",
   "ceramah motivasi indonesia",
-  "motivasi sukses bahasa indonesia",
-  "motivasi pagi bahasa indonesia",
-  "motivator indonesia terbaru",
-  "motivasi pantang menyerah indonesia",
-  "nasihat kehidupan indonesia",
-  "motivasi bangkit dari kegagalan",
-  "motivasi kerja keras indonesia",
-  "renungan kehidupan indonesia"
+  "motivator indonesia terbaru"
 ];
 
 const FALLBACK_QUERIES = [
-  "motivasi hidup indonesia terbaru",
-  "ceramah motivasi penyemangat",
-  "motivasi sukses dari nol indonesia",
-  "motivator indonesia viral",
-  "motivasi disiplin diri indonesia",
-  "motivasi anak muda indonesia",
-  "kata bijak kehidupan indonesia",
-  "motivasi pengusaha indonesia",
-  "motivasi percaya diri indonesia",
-  "motivasi semangat hidup indonesia"
+  "podcast indonesia terbaru",
+  "podcast artis indonesia full",
+  "podcast musisi viral indonesia",
+  "podcast penyanyi indonesia terbaru",
+  "ariel noah podcast terbaru",
+  "deddy corbuzier podcast terbaru",
+  "podcast komedi indonesia",
+  "motivasi sukses bahasa indonesia",
+  "motivasi pantang menyerah indonesia",
+  "nasihat hidup motivasi indonesia"
 ];
 
-const DEFAULT_CHANNEL_HANDLES = [];
+const DEFAULT_CHANNEL_HANDLES = [
+  "@corbuzier",
+  "@VINDES",
+  "@radityadika",
+  "@DanielManantaNetwork",
+  "@HASCreative",
+  "@podkesmas",
+  "@podhub",
+  "@Kasisolusi"
+];
 
-const MOTIVATION_FORMAT_RE = /motivasi|motivator|inspiras[ai]|inspiratif|nasihat|nasehat|pengembangan\s*diri|kata\s*kata\s*bijak|kata\s*bijak|renungan|ceramah\s*motivasi/i;
-const MOTIVATION_TOPIC_EXTRA_RE = /sukses|pola\s*pikir|disiplin|semangat|bangkit|pantang\s*menyerah|produktif|kehidupan|spiritual|kerja\s*keras|kegagalan|percaya\s*diri|berproses|pejuang|hijrah/i;
+// Kategori utama (70%): podcast artis.
+const PODCAST_FORMAT_RE = /podcast|siniar|podhub|podkesmas|close\s*the\s*door|vindes|deddy|corbuzier|raditya|daniel\s*mananta|has\s*creative|kasisolusi|podcast\s*komedi/i;
+const MUSICIAN_TOPIC_RE = /musisi|penyanyi|vokalis|\bband\b|ariel|noah|ahmad\s*dhani|ari\s*lasso|dewa\s*19|once\s*mekel|judika|rossa|raisa|tulus|maia\s*estianty|anang|melly\s*goeslaw/i;
+const PODCAST_TOPIC_RE = new RegExp(`${PODCAST_FORMAT_RE.source}|${MUSICIAN_TOPIC_RE.source}`, "i");
+// Kategori selingan (30%): motivasi (Indonesia). Frasa eksplisit supaya tidak
+// salah klasifikasi video podcast biasa sebagai motivasi.
+const MOTIVATION_FORMAT_RE = /motivasi|motivator|inspiras[ai]|inspiratif|nasihat\s*hidup|nasehat\s*hidup|pengembangan\s*diri|kata\s*kata\s*bijak|kata\s*bijak|renungan|ceramah\s*motivasi/i;
+const MOTIVATION_TOPIC_EXTRA_RE = /pantang\s*menyerah|pejuang\s*hidup|semangat\s*hidup|bangkit\s*dari|kerja\s*keras|percaya\s*diri|pola\s*pikir\s*sukses/i;
 const MOTIVATION_TOPIC_RE = new RegExp(`${MOTIVATION_FORMAT_RE.source}|${MOTIVATION_TOPIC_EXTRA_RE.source}`, "i");
+// Gabungan: kandidat diterima jika cocok salah satu kategori.
+const ALLOWED_TOPIC_RE = new RegExp(`${PODCAST_TOPIC_RE.source}|${MOTIVATION_TOPIC_RE.source}`, "i");
+const ALLOWED_FORMAT_RE = new RegExp(`${PODCAST_FORMAT_RE.source}|${MOTIVATION_FORMAT_RE.source}`, "i");
 const POLITICAL_TOPIC_RE = /politik|pilpres|pemilu|partai|dpr|mpr|presiden|wakil\s*presiden|menteri|kabinet|reshuffle|prabowo|jokowi|gibran|anies|ganjar|bawaslu|kpu|kompastv|kompas\s*tv|inews|cnn\s*indonesia|forum\s*keadilan|akbar\s*faizal|total\s*politik|tempo(?:dotco)?|bocor\s*alus|brin/i;
-const NON_MOTIVATION_NOISE_RE = /official\s*music\s*video|official\s*audio|video\s*klip|karaoke|cover\s*lagu|trailer|teaser|sinetron|drama|full\s*movie|film\s*pendek|gameplay|live\s*stream\s*game|highlight\s*bola/i;
+const NON_TOPIC_NOISE_RE = /official\s*music\s*video|official\s*audio|video\s*klip|karaoke|cover\s*lagu|trailer|teaser|sinetron|drama|full\s*movie|film\s*pendek|gameplay|live\s*stream\s*game|highlight\s*bola/i;
 const UNSAFE_CONTENT_RE = /judi|slot|togel|casino|taruhan|betting|pinjol|pinjaman\s*online|paylater|riba|sara|rasis|ujaran\s*kebencian|porn|porno|bokep|narkoba|ganja|sabu|teroris|bom/i;
 const LOW_QUALITY_CONTENT_RE = /gosip|hot\s*news|breaking\s*news|infotainment|skandal|bocor|aib|sensasi|clickbait|prank|reaction\s*murahan/i;
 const SINGING_PERFORMANCE_RE = /karaoke|cover\s*lagu|live\s*music|live\s*performance|konser|nyanyi\s*lagu|reff\s*lagu/i;
@@ -274,15 +293,50 @@ function isTrustedChannelSource(item) {
   return ["youtube_api_channel", "yt_dlp_channel"].includes(item.discovery_source);
 }
 
-function isMotivationCandidate(item) {
+function isAllowedCandidate(item) {
   if (isBlockedChannelItem(item)) return false;
   const text = candidateText(item);
   if (POLITICAL_TOPIC_RE.test(text)) return false;
   if (UNSAFE_CONTENT_RE.test(text)) return false;
   if (LOW_QUALITY_CONTENT_RE.test(text)) return false;
   if (SINGING_PERFORMANCE_RE.test(text)) return false;
-  if (NON_MOTIVATION_NOISE_RE.test(text) && !MOTIVATION_FORMAT_RE.test(text)) return false;
-  return MOTIVATION_TOPIC_RE.test(text) || isTrustedChannelSource(item);
+  if (NON_TOPIC_NOISE_RE.test(text) && !ALLOWED_FORMAT_RE.test(text)) return false;
+  return ALLOWED_TOPIC_RE.test(text) || isTrustedChannelSource(item);
+}
+
+// Tentukan kategori kandidat: "podcast" (utama) atau "motivasi" (selingan).
+// Channel terpercaya = channel podcast. Motivasi hanya jika cocok motivasi DAN
+// bukan podcast/musisi, supaya rasio 70/30 akurat.
+function classifyTopic(item) {
+  const text = candidateText(item);
+  if (isTrustedChannelSource(item)) return "podcast";
+  if (PODCAST_TOPIC_RE.test(text)) return "podcast";
+  if (MOTIVATION_TOPIC_RE.test(text)) return "motivasi";
+  return "podcast";
+}
+
+// Pilih `target` kandidat dari pool sambil menjaga rasio podcast:motivasi.
+// Best-effort: kalau salah satu kategori kurang, sisanya diisi kategori lain.
+function balanceByCategory(items, target, podcastRatio) {
+  if (items.length <= target) return items;
+  const podcast = items.filter((it) => classifyTopic(it) === "podcast");
+  const motivasi = items.filter((it) => classifyTopic(it) !== "podcast");
+  const podcastTarget = Math.round(target * podcastRatio);
+  const motivasiTarget = target - podcastTarget;
+  const out = [...podcast.slice(0, podcastTarget), ...motivasi.slice(0, motivasiTarget)];
+  if (out.length < target) {
+    const used = new Set(out.map((it) => it.id || it.url));
+    for (const it of items) {
+      if (out.length >= target) break;
+      const key = it.id || it.url;
+      if (used.has(key)) continue;
+      used.add(key);
+      out.push(it);
+    }
+  }
+  return out
+    .sort((a, b) => (b.discovery_score || 0) - (a.discovery_score || 0))
+    .slice(0, target);
 }
 
 function passesDuration(item, options) {
@@ -294,10 +348,10 @@ function passesDuration(item, options) {
 
 function topicMultiplier(text) {
   const value = String(text || "").toLowerCase();
-  if (/motivasi|motivation|inspiras|inspiratif/.test(value)) return 1.4;
-  if (/sukses|mindset|pantang\s*menyerah|bangkit|disiplin|kerja\s*keras/.test(value)) return 1.3;
-  if (/kata\s*kata\s*bijak|kata\s*bijak|quotes?|renungan|nasihat|nasehat/.test(value)) return 1.2;
-  if (/semangat|produktif|percaya\s*diri|mental|spiritual|hijrah/.test(value)) return 1.1;
+  if (/podcast.*artis|artis.*podcast|deddy|corbuzier|vindes|raditya|close\s*the\s*door/.test(value)) return 1.4;
+  if (/musisi|penyanyi|vokalis|\bband\b|ariel|noah|ahmad\s*dhani|ari\s*lasso|dewa\s*19|once\s*mekel|judika|rossa|raisa|tulus/.test(value)) return 1.38;
+  if (/podhub|podkesmas|daniel\s*mananta|has\s*creative|kasisolusi/.test(value)) return 1.28;
+  if (/motivasi|motivator|inspiras|ceramah\s*motivasi/.test(value)) return 1.2;
   return 1;
 }
 
@@ -330,7 +384,7 @@ function isViralCandidate(item, options) {
   const hasEnoughViews = stats.views >= options.minViews;
   if (!isFastGrowing && !hasEnoughViews) return false;
 
-  return isMotivationCandidate(item);
+  return isAllowedCandidate(item);
 }
 
 function isTopicCandidate(item, options) {
@@ -339,7 +393,7 @@ function isTopicCandidate(item, options) {
 
   if (!passesDuration(item, options)) return false;
 
-  return isMotivationCandidate(item);
+  return isAllowedCandidate(item);
 }
 
 function isFreshChannelCandidate(item, options) {
@@ -352,7 +406,7 @@ function isFreshChannelCandidate(item, options) {
     || ageHours(candidatePublishedAt(item)) <= options.publishedAfterDays * 24 + 6;
   if (!isFresh) return false;
 
-  return isMotivationCandidate(item);
+  return isAllowedCandidate(item);
 }
 
 function isTrendingPodcastCandidate(item, options) {
@@ -360,7 +414,7 @@ function isTrendingPodcastCandidate(item, options) {
   if (!id) return false;
   if (!passesDuration(item, options)) return false;
   if (ageHours(candidatePublishedAt(item)) > options.trendingMaxAgeHours) return false;
-  return isMotivationCandidate(item);
+  return isAllowedCandidate(item);
 }
 
 function parseJsonLines(stdout) {
@@ -1165,7 +1219,10 @@ export async function discoverAndQueueVideos(options = {}) {
     regionCode,
     relevanceLanguage
   };
-  const theme = options.theme && options.theme !== "auto" ? options.theme : "motivasi";
+  const defaultTheme = options.theme && options.theme !== "auto" ? options.theme : "";
+  const podcastRatio = Math.min(1, Math.max(0, Number(process.env.AUTO_DISCOVER_PODCAST_RATIO) || 0.7));
+  // Kumpulkan pool lebih besar dari addCount supaya rasio 70/30 bisa dijaga.
+  const collectTarget = Math.min(Math.max(addCount * 3, addCount + 6), 60);
 
   const videos = queueMaintenance.videos;
   const history = await readJson("history", []);
@@ -1174,7 +1231,7 @@ export async function discoverAndQueueVideos(options = {}) {
   let selected = [];
   const selectedPasses = [];
   for (const pass of fallbackPasses(queries, discoveryOptions)) {
-    const remainingAddCount = addCount - selected.length;
+    const remainingAddCount = collectTarget - selected.length;
     if (remainingAddCount <= 0) break;
     console.log(`AUTO DISCOVERY pass=${pass.mode}, queries=${pass.queries.length}, maxResults=${pass.options.maxResults}, days=${pass.options.publishedAfterDays}`);
     const rawCandidates = await loadRawCandidates({
@@ -1195,21 +1252,31 @@ export async function discoverAndQueueVideos(options = {}) {
         const id = item.id || extractYoutubeVideoId(item.webpage_url || item.url);
         if (id) knownIds.add(id);
       }
-      console.log(`AUTO DISCOVERY pass=${pass.mode} memilih ${passSelected.length} kandidat (total ${selected.length}/${addCount}).`);
-      if (selected.length >= addCount) break;
+      console.log(`AUTO DISCOVERY pass=${pass.mode} memilih ${passSelected.length} kandidat (total ${selected.length}/${collectTarget}).`);
+      if (selected.length >= collectTarget) break;
       continue;
     }
     console.log(`AUTO DISCOVERY pass=${pass.mode} kosong; lanjut fallback.`);
   }
+
+  // Terapkan rasio kategori (mis. 70% podcast artis, 30% motivasi).
+  const poolCount = selected.length;
+  selected = balanceByCategory(selected, addCount, podcastRatio);
+  const podcastPicked = selected.filter((it) => classifyTopic(it) === "podcast").length;
+  console.log(`AUTO DISCOVERY rasio: pool=${poolCount} -> dipilih ${selected.length} (podcast=${podcastPicked}, motivasi=${selected.length - podcastPicked}; target podcast ~${Math.round(podcastRatio * 100)}%).`);
 
   const selectedPass = selectedPasses[0] || "";
   const added = [];
   for (const [index, item] of selected.entries()) {
     const url = item.webpage_url || item.url || videoUrl(item.id);
     const stats = item.discovery_stats || viralStats(item);
+    const category = classifyTopic(item);
+    const itemTheme = defaultTheme || (category === "motivasi" ? "motivasi" : "podcast artis");
+    const itemSceneMode = category === "motivasi" ? "auto" : "podcast";
     const video = await addVideo({
       url,
-      theme,
+      theme: itemTheme,
+      scene_mode: itemSceneMode,
       target_date: targetDate,
       priority: 10 + index,
       status: "queued",
