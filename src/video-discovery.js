@@ -20,67 +20,58 @@ import {
 } from "./queue-policy.js";
 
 const DEFAULT_QUERIES = [
-  "podcast indonesia hari ini",
-  "podcast indonesia viral hari ini",
-  "podcast artis indonesia hari ini",
-  "podcast artis indonesia terbaru",
-  "podcast artis indonesia viral",
-  "podcast musisi indonesia terbaru",
-  "podcast musisi indonesia viral",
-  "podcast musisi indonesia hari ini",
-  "podcast ariel noah terbaru",
-  "podcast ahmad dhani terbaru",
-  "podcast ari lasso terbaru",
-  "podcast penyanyi indonesia terbaru",
-  "podcast band indonesia terbaru",
-  "podcast deddy corbuzier terbaru",
-  "podcast vindes terbaru"
+  "motivasi hidup",
+  "motivasi sukses",
+  "video motivasi singkat",
+  "kata kata motivasi",
+  "motivasi pagi",
+  "motivasi diri sendiri",
+  "motivasi bisnis indonesia",
+  "motivasi islami",
+  "nasihat kehidupan",
+  "motivasi viral indonesia",
+  "motivasi semangat hidup",
+  "motivasi pantang menyerah",
+  "motivasi disiplin diri",
+  "motivasi mindset sukses",
+  "inspirasi kehidupan"
 ];
 
 const FALLBACK_QUERIES = [
-  "podcast indonesia hari ini",
-  "podcast indonesia terbaru",
-  "podcast indonesia viral",
-  "podcast artis indonesia full",
-  "podcast selebriti indonesia terbaru",
-  "podcast musisi viral indonesia",
-  "podcast penyanyi viral indonesia",
-  "podcast band indonesia viral",
-  "ariel noah podcast terbaru",
-  "ahmad dhani podcast terbaru",
-  "ari lasso podcast terbaru",
-  "dewa 19 podcast terbaru",
-  "once mekel podcast terbaru",
-  "judika podcast terbaru",
-  "rossa podcast terbaru",
-  "raisa podcast terbaru",
-  "tulus podcast terbaru",
-  "podcast deddy corbuzier terbaru",
-  "raditya dika podcast terbaru",
-  "podcast vindes terbaru",
-  "komika indonesia podcast terbaru",
-  "podcast komedi indonesia"
+  "motivasi hidup terbaru",
+  "motivasi hidup viral",
+  "video motivasi indonesia",
+  "motivasi sukses muda",
+  "motivasi kerja keras",
+  "motivasi bangkit dari kegagalan",
+  "kata kata bijak kehidupan",
+  "motivasi diri terbaru",
+  "motivasi pengembangan diri",
+  "motivasi produktif",
+  "motivasi mental kuat",
+  "motivasi pengusaha indonesia",
+  "ceramah motivasi singkat",
+  "renungan kehidupan",
+  "motivasi belajar",
+  "motivasi anak muda indonesia",
+  "self improvement indonesia",
+  "motivasi inspiratif",
+  "motivasi spiritual",
+  "quotes motivasi indonesia",
+  "motivasi pagi penyemangat",
+  "motivasi sukses dari nol"
 ];
 
-const DEFAULT_CHANNEL_HANDLES = [
-  "@corbuzier",
-  "@VINDES",
-  "@radityadika",
-  "@DanielManantaNetwork",
-  "@HASCreative",
-  "@podkesmas",
-  "@podhub",
-  "@Kasisolusi"
-];
+const DEFAULT_CHANNEL_HANDLES = [];
 
-const PODCAST_FORMAT_RE = /podcast|siniar|podhub|podkesmas|close\s*the\s*door|vindes|deddy|corbuzier|raditya|daniel\s*mananta|has\s*creative|kasisolusi|podcast\s*komedi/i;
-const MUSICIAN_TOPIC_RE = /musisi|penyanyi|vokalis|\bband\b|ariel|noah|ahmad\s*dhani|ari\s*lasso|dewa\s*19|once\s*mekel|judika|rossa|raisa|tulus|maia\s*estianty|anang|melly\s*goeslaw/i;
-const PODCAST_TOPIC_RE = new RegExp(`${PODCAST_FORMAT_RE.source}|${MUSICIAN_TOPIC_RE.source}`, "i");
+const MOTIVATION_FORMAT_RE = /motivasi|motivation(?:al)?|inspiras[ai]|inspiratif|nasihat|nasehat|self\s*improvement|pengembangan\s*diri|kata\s*kata\s*bijak|kata\s*bijak|quotes?|renungan|ceramah\s*motivasi/i;
+const MOTIVATION_TOPIC_EXTRA_RE = /sukses|mindset|disiplin|semangat|bangkit|pantang\s*menyerah|produktif|mental|kehidupan|hidup|spiritual|kerja\s*keras|kegagalan|percaya\s*diri|growth|berproses|pejuang|hijrah/i;
+const MOTIVATION_TOPIC_RE = new RegExp(`${MOTIVATION_FORMAT_RE.source}|${MOTIVATION_TOPIC_EXTRA_RE.source}`, "i");
 const POLITICAL_TOPIC_RE = /politik|pilpres|pemilu|partai|dpr|mpr|presiden|wakil\s*presiden|menteri|kabinet|reshuffle|prabowo|jokowi|gibran|anies|ganjar|bawaslu|kpu|kompastv|kompas\s*tv|inews|cnn\s*indonesia|forum\s*keadilan|akbar\s*faizal|total\s*politik|tempo(?:dotco)?|bocor\s*alus|brin/i;
-const NON_PODCAST_NOISE_RE = /official\s*music\s*video|official\s*audio|video\s*klip|lirik|lyrics|karaoke|konser|live\s*session|trailer|teaser|sinetron|drama|full\s*movie|film\s*pendek|gameplay|live\s*stream\s*game|highlight\s*bola/i;
+const NON_MOTIVATION_NOISE_RE = /official\s*music\s*video|official\s*audio|video\s*klip|karaoke|cover\s*lagu|trailer|teaser|sinetron|drama|full\s*movie|film\s*pendek|gameplay|live\s*stream\s*game|highlight\s*bola/i;
 const UNSAFE_CONTENT_RE = /judi|slot|togel|casino|taruhan|betting|pinjol|pinjaman\s*online|paylater|riba|sara|rasis|ujaran\s*kebencian|porn|porno|bokep|narkoba|ganja|sabu|teroris|bom/i;
 const LOW_QUALITY_CONTENT_RE = /gosip|hot\s*news|breaking\s*news|infotainment|skandal|bocor|aib|sensasi|clickbait|prank|reaction\s*murahan/i;
-const SINGING_PERFORMANCE_RE = /sedang\s*nyanyi|lagi\s*nyanyi|menyanyi|bernyanyi|nyanyiin|dinyanyikan|karaoke|cover\s*lagu|live\s*music|live\s*performance|konser|panggung|lirik|lyrics|reff|chorus/i;
+const SINGING_PERFORMANCE_RE = /karaoke|cover\s*lagu|live\s*music|live\s*performance|konser|nyanyi\s*lagu|reff\s*lagu/i;
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3";
 const DISCOVERY_CACHE_FILE = "discovery-cache.json";
 const AUTO_DISCOVERY_SELECTABLE_STATUSES = new Set(["queued", "failed", "retry"]);
@@ -296,19 +287,19 @@ function viralStats(item) {
   };
 }
 
-function isTrustedPodcastChannelSource(item) {
+function isTrustedChannelSource(item) {
   return ["youtube_api_channel", "yt_dlp_channel"].includes(item.discovery_source);
 }
 
-function isPodcastCandidate(item) {
+function isMotivationCandidate(item) {
   if (isBlockedChannelItem(item)) return false;
   const text = candidateText(item);
   if (POLITICAL_TOPIC_RE.test(text)) return false;
   if (UNSAFE_CONTENT_RE.test(text)) return false;
   if (LOW_QUALITY_CONTENT_RE.test(text)) return false;
   if (SINGING_PERFORMANCE_RE.test(text)) return false;
-  if (NON_PODCAST_NOISE_RE.test(text) && !PODCAST_FORMAT_RE.test(text)) return false;
-  return PODCAST_TOPIC_RE.test(text) || isTrustedPodcastChannelSource(item);
+  if (NON_MOTIVATION_NOISE_RE.test(text) && !MOTIVATION_FORMAT_RE.test(text)) return false;
+  return MOTIVATION_TOPIC_RE.test(text) || isTrustedChannelSource(item);
 }
 
 function passesDuration(item, options) {
@@ -320,10 +311,10 @@ function passesDuration(item, options) {
 
 function topicMultiplier(text) {
   const value = String(text || "").toLowerCase();
-  if (/podcast.*artis|artis.*podcast|deddy|corbuzier|vindes|raditya|close\s*the\s*door/.test(value)) return 1.4;
-  if (/musisi|penyanyi|vokalis|\bband\b|ariel|noah|ahmad\s*dhani|ari\s*lasso|dewa\s*19|once\s*mekel|judika|rossa|raisa|tulus/.test(value)) return 1.38;
-  if (/podhub|podkesmas|daniel\s*mananta|has\s*creative|kasisolusi/.test(value)) return 1.28;
-  if (/podcast.*komedi|komedi.*podcast|komika/.test(value)) return 1.1;
+  if (/motivasi|motivation|inspiras|inspiratif/.test(value)) return 1.4;
+  if (/sukses|mindset|pantang\s*menyerah|bangkit|disiplin|kerja\s*keras/.test(value)) return 1.3;
+  if (/kata\s*kata\s*bijak|kata\s*bijak|quotes?|renungan|nasihat|nasehat/.test(value)) return 1.2;
+  if (/semangat|produktif|percaya\s*diri|mental|spiritual|hijrah/.test(value)) return 1.1;
   return 1;
 }
 
@@ -331,14 +322,14 @@ function scoreCandidate(item) {
   const duration = numberValue(item.duration);
   const stats = viralStats(item);
   const text = candidateText(item);
-  const durationMultiplier = duration >= 1200 && duration <= 7200 ? 1.1 : 1;
+  const durationMultiplier = duration >= 60 && duration <= 600 ? 1.1 : 1;
   const recencyMultiplier = stats.ageHours <= 72 ? 1.15 : stats.ageHours <= 168 ? 1.05 : 0.95;
   const raw =
     stats.viewsPerHour * 0.75 +
     stats.likesPerHour * 2 +
     stats.commentsPerHour * 25 +
     stats.engagementRate * 50000;
-  const trustedChannelBoost = isTrustedPodcastChannelSource(item) ? 35000 : 0;
+  const trustedChannelBoost = isTrustedChannelSource(item) ? 35000 : 0;
   const trendingBoost = item.discovery_source === "youtube_api_trending" ? 45000 : 0;
   const freshBoost = stats.ageHours <= 12 ? 55000 : stats.ageHours <= 24 ? 40000 : stats.ageHours <= 72 ? 18000 : 0;
 
@@ -356,7 +347,7 @@ function isViralCandidate(item, options) {
   const hasEnoughViews = stats.views >= options.minViews;
   if (!isFastGrowing && !hasEnoughViews) return false;
 
-  return isPodcastCandidate(item);
+  return isMotivationCandidate(item);
 }
 
 function isTopicCandidate(item, options) {
@@ -365,7 +356,7 @@ function isTopicCandidate(item, options) {
 
   if (!passesDuration(item, options)) return false;
 
-  return isPodcastCandidate(item);
+  return isMotivationCandidate(item);
 }
 
 function isFreshChannelCandidate(item, options) {
@@ -378,7 +369,7 @@ function isFreshChannelCandidate(item, options) {
     || ageHours(candidatePublishedAt(item)) <= options.publishedAfterDays * 24 + 6;
   if (!isFresh) return false;
 
-  return isPodcastCandidate(item);
+  return isMotivationCandidate(item);
 }
 
 function isTrendingPodcastCandidate(item, options) {
@@ -386,7 +377,7 @@ function isTrendingPodcastCandidate(item, options) {
   if (!id) return false;
   if (!passesDuration(item, options)) return false;
   if (ageHours(candidatePublishedAt(item)) > options.trendingMaxAgeHours) return false;
-  return isPodcastCandidate(item);
+  return isMotivationCandidate(item);
 }
 
 function parseJsonLines(stdout) {
@@ -1191,7 +1182,7 @@ export async function discoverAndQueueVideos(options = {}) {
     regionCode,
     relevanceLanguage
   };
-  const theme = options.theme && options.theme !== "auto" ? options.theme : "podcast artis";
+  const theme = options.theme && options.theme !== "auto" ? options.theme : "motivasi";
 
   const videos = queueMaintenance.videos;
   const history = await readJson("history", []);
@@ -1302,7 +1293,7 @@ const isCli = process.argv[1]
 
 if (isCli) {
   discoverAndQueueVideos({
-    theme: process.env.THEME || "podcast artis",
+    theme: process.env.THEME || "motivasi",
     targetDate: todayDate()
   })
     .then((result) => {

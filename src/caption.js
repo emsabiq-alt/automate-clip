@@ -665,9 +665,9 @@ const GENERIC_HASHTAGS = new Set([
 ]);
 
 const BASE_HASHTAGS = [
-  "#CeritaHidup",
-  "#SudutPandang",
-  "#RuangCerita"
+  "#Motivasi",
+  "#MotivasiHidup",
+  "#Inspirasi"
 ];
 
 const STIFF_CAPTION_OPENERS = [

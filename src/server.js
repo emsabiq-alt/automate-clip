@@ -646,7 +646,7 @@ app.post("/api/themes", async (req, res) => {
   const now = new Date().toISOString();
   const item = {
     id: req.body.id || makeId("theme"),
-    name: req.body.name || "podcast",
+    name: req.body.name || "motivasi",
     status: req.body.status || "active",
     language: req.body.language || "id",
     caption_style: req.body.caption_style || "natural",
@@ -672,11 +672,11 @@ app.patch("/api/themes/:id", async (req, res) => {
 app.post("/api/prompts", async (req, res) => {
   const item = {
     id: req.body.id || makeId("prompt"),
-    theme: req.body.theme || "podcast artis",
+    theme: req.body.theme || "motivasi",
     hook_style: req.body.hook_style || "emotional curiosity",
     language: req.body.language || "id",
     cta: req.body.cta || "Menurut kamu bagaimana?",
-    hashtag_template: req.body.hashtag_template || "#CeritaHidup #SudutPandang #RuangCerita",
+    hashtag_template: req.body.hashtag_template || "#Motivasi #MotivasiHidup #Inspirasi",
     thumbnail_style: req.body.thumbnail_style || "singkat dan kuat",
     updated_at: new Date().toISOString()
   };

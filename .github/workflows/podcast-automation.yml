@@ -46,7 +46,7 @@ on:
       scene_mode:
         description: "Scene mode: podcast, solo, game, reaction, sport, auto, active_speaker, center"
         required: false
-        default: "podcast"
+        default: "auto"
       clip_count:
         description: How many clips to render from the source video
         required: false
@@ -242,8 +242,8 @@ jobs:
       INSTAGRAM_CONTAINER_MAX_ATTEMPTS: ${{ secrets.INSTAGRAM_CONTAINER_MAX_ATTEMPTS || '90' }}
       TOKEN_REFRESH_BEFORE_DAYS: ${{ secrets.TOKEN_REFRESH_BEFORE_DAYS || '10' }}
       AUTO_DISCOVER_VIDEOS: ${{ secrets.AUTO_DISCOVER_VIDEOS || 'true' }}
-      AUTO_DISCOVER_QUERY: ${{ secrets.AUTO_DISCOVER_QUERY || 'podcast indonesia hari ini|podcast indonesia viral hari ini|podcast artis indonesia hari ini|podcast artis indonesia terbaru|podcast artis indonesia viral|podcast musisi indonesia terbaru|podcast musisi indonesia viral|podcast musisi indonesia hari ini|podcast ariel noah terbaru|podcast ahmad dhani terbaru|podcast ari lasso terbaru|podcast penyanyi indonesia terbaru|podcast band indonesia terbaru|podcast deddy corbuzier terbaru|podcast vindes terbaru' }}
-      AUTO_DISCOVER_DAILY_QUERY: ${{ secrets.AUTO_DISCOVER_DAILY_QUERY || 'podcast musisi indonesia viral hari ini' }}
+      AUTO_DISCOVER_QUERY: ${{ secrets.AUTO_DISCOVER_QUERY || 'motivasi hidup|motivasi sukses|video motivasi singkat|kata kata motivasi|motivasi pagi|motivasi diri sendiri|motivasi bisnis indonesia|motivasi islami|nasihat kehidupan|motivasi viral indonesia|motivasi semangat hidup|motivasi pantang menyerah|motivasi disiplin diri|motivasi mindset sukses|inspirasi kehidupan' }}
+      AUTO_DISCOVER_DAILY_QUERY: ${{ secrets.AUTO_DISCOVER_DAILY_QUERY || 'motivasi viral hari ini' }}
       AUTO_DISCOVER_USE_API: ${{ secrets.AUTO_DISCOVER_USE_API || 'false' }}
       AUTO_DISCOVER_CHANNEL_ONLY: ${{ vars.AUTO_DISCOVER_CHANNEL_ONLY || secrets.AUTO_DISCOVER_CHANNEL_ONLY || 'false' }}
       AUTO_DISCOVER_ALLOW_OAUTH: ${{ secrets.AUTO_DISCOVER_ALLOW_OAUTH || 'false' }}
@@ -260,8 +260,8 @@ jobs:
       AUTO_DISCOVER_DAILY_QUEUE_LIMIT: ${{ vars.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || secrets.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || '10' }}
       AUTO_DISCOVER_EXPIRE_OLD_QUEUE: ${{ secrets.AUTO_DISCOVER_EXPIRE_OLD_QUEUE || 'true' }}
       AUTO_DISCOVER_QUEUE_TTL_DAYS: ${{ secrets.AUTO_DISCOVER_QUEUE_TTL_DAYS || '1' }}
-      AUTO_DISCOVER_MIN_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MIN_DURATION_SECONDS || '600' }}
-      AUTO_DISCOVER_MAX_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MAX_DURATION_SECONDS || '10800' }}
+      AUTO_DISCOVER_MIN_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MIN_DURATION_SECONDS || '60' }}
+      AUTO_DISCOVER_MAX_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MAX_DURATION_SECONDS || '1800' }}
       AUTO_DISCOVER_MIN_VIEWS: ${{ vars.AUTO_DISCOVER_MIN_VIEWS || secrets.AUTO_DISCOVER_MIN_VIEWS || '0' }}
       AUTO_DISCOVER_MIN_VIEWS_PER_HOUR: ${{ vars.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || secrets.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || '0' }}
       AUTO_DISCOVER_PUBLISHED_AFTER_DAYS: ${{ vars.AUTO_DISCOVER_PUBLISHED_AFTER_DAYS || secrets.AUTO_DISCOVER_PUBLISHED_AFTER_DAYS || '30' }}
@@ -270,7 +270,7 @@ jobs:
       AUTO_DISCOVER_RELEVANCE_LANGUAGE: ${{ secrets.AUTO_DISCOVER_RELEVANCE_LANGUAGE || 'id' }}
       AUTO_DISCOVER_BLOCKED_CHANNELS: ${{ vars.AUTO_DISCOVER_BLOCKED_CHANNELS || secrets.AUTO_DISCOVER_BLOCKED_CHANNELS || 'Taulany TV|@taulanytv' }}
       AUTO_DISCOVER_CHANNEL_IDS: ${{ secrets.AUTO_DISCOVER_CHANNEL_IDS }}
-      AUTO_DISCOVER_CHANNEL_HANDLES: ${{ secrets.AUTO_DISCOVER_CHANNEL_HANDLES || '@corbuzier|@VINDES|@radityadika|@DanielManantaNetwork|@HASCreative|@podkesmas|@podhub|@Kasisolusi' }}
+      AUTO_DISCOVER_CHANNEL_HANDLES: ${{ secrets.AUTO_DISCOVER_CHANNEL_HANDLES || '' }}
       AUTO_DISCOVER_FRESH_UPLOAD_DAYS: ${{ vars.AUTO_DISCOVER_FRESH_UPLOAD_DAYS || secrets.AUTO_DISCOVER_FRESH_UPLOAD_DAYS || '30' }}
       AUTO_DISCOVER_CHANNEL_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || secrets.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || '10' }}
 
@@ -357,8 +357,8 @@ jobs:
       SUBTITLE_FONT_FAMILY: ${{ github.event.inputs.subtitle_font || secrets.SUBTITLE_FONT_FAMILY || 'Selawik Semibold' }}
       SUBTITLE_FALLBACK_FONTS: ${{ secrets.SUBTITLE_FALLBACK_FONTS || 'Selawik Semibold,Selawik,DejaVu Sans' }}
       SUBTITLE_FONT_SIZE: ${{ github.event.inputs.subtitle_font_size || secrets.SUBTITLE_FONT_SIZE || '56' }}
-      SCENE_MODE: ${{ github.event.inputs.scene_mode || secrets.SCENE_MODE || 'podcast' }}
-      SMART_CROP_MODE: ${{ github.event.inputs.scene_mode || secrets.SMART_CROP_MODE || 'podcast' }}
+      SCENE_MODE: ${{ github.event.inputs.scene_mode || secrets.SCENE_MODE || 'auto' }}
+      SMART_CROP_MODE: ${{ github.event.inputs.scene_mode || secrets.SMART_CROP_MODE || 'auto' }}
       CLIP_COUNT: ${{ github.event.inputs.clip_count || secrets.CLIP_COUNT || '1' }}
       SUBTITLE_MIN_FONT_SIZE: ${{ secrets.SUBTITLE_MIN_FONT_SIZE || '48' }}
       SUBTITLE_MARGIN_V: ${{ github.event.inputs.subtitle_margin_v || '550' }}
