@@ -195,10 +195,10 @@ Sistem harus mengecek apakah posting untuk tanggal hari ini sudah dilakukan.
 Aturan cron harian:
 
 ```txt
-Workflow scheduled berjalan 6 kali per hari.
+Workflow scheduled berjalan 7 kali per hari (lihat blok schedule di workflow GitHub Actions).
 Setiap scheduled run memproses 1 clip dari link automasi aktif.
-Satu link automasi dipakai sampai menghasilkan 3 publish sukses, baru pindah ke link berikutnya.
-Queue automasi dijaga maksimal 5 link aktif.
+Satu link automasi dipakai sampai menghasilkan 1 publish sukses, lalu pindah ke link berikutnya (1 source = 1 clip).
+Queue automasi dijaga maksimal 10 link aktif (kolam ~10 source/hari; 7 dipakai, sisanya cadangan/variasi).
 `YOUTUBE_DAILY_UPLOAD_LIMIT=0` berarti aplikasi tidak memberi batas upload harian; jumlah harian dikendalikan oleh jadwal dan quota platform.
 Jika `MAX_SCHEDULED_POSTS_PER_DAY` diisi lebih dari `0`, nilai itu menjadi limit umum semua platform.
 ```
@@ -734,13 +734,13 @@ THREADS_UPLOAD_ENABLED=false
 THREADS_CONTAINER_POLL_SECONDS=6
 THREADS_CONTAINER_MAX_ATTEMPTS=90
 META_INTER_CLIP_DELAY_SECONDS=75
-MAX_SCHEDULED_POSTS_PER_DAY=0
+MAX_SCHEDULED_POSTS_PER_DAY=7
 YOUTUBE_DAILY_UPLOAD_LIMIT=0
-AUTOMATION_QUEUE_LINK_LIMIT=5
-QUEUE_SERIES_TARGET_COUNT=3
+AUTOMATION_QUEUE_LINK_LIMIT=10
+QUEUE_SERIES_TARGET_COUNT=1
 SCHEDULED_CLIPS_PER_RUN=1
 AUTO_DISCOVER_CHANNEL_ONLY=false
-AUTO_DISCOVER_DAILY_QUEUE_LIMIT=5
+AUTO_DISCOVER_DAILY_QUEUE_LIMIT=10
 AUTO_DISCOVER_EXPIRE_OLD_QUEUE=true
 AUTO_DISCOVER_QUEUE_TTL_DAYS=1
 ```
@@ -861,13 +861,13 @@ THUMBNAIL_TRANSITION_SPEED=1.28
 THUMBNAIL_TRANSITION_KEY_COLOR=0x000000
 THUMBNAIL_TRANSITION_KEY_SIMILARITY=0.18
 THUMBNAIL_TRANSITION_KEY_BLEND=0.04
-MAX_SCHEDULED_POSTS_PER_DAY=0
+MAX_SCHEDULED_POSTS_PER_DAY=7
 YOUTUBE_DAILY_UPLOAD_LIMIT=0
-AUTOMATION_QUEUE_LINK_LIMIT=5
-QUEUE_SERIES_TARGET_COUNT=3
+AUTOMATION_QUEUE_LINK_LIMIT=10
+QUEUE_SERIES_TARGET_COUNT=1
 SCHEDULED_CLIPS_PER_RUN=1
 AUTO_DISCOVER_CHANNEL_ONLY=false
-AUTO_DISCOVER_DAILY_QUEUE_LIMIT=5
+AUTO_DISCOVER_DAILY_QUEUE_LIMIT=10
 AUTO_DISCOVER_EXPIRE_OLD_QUEUE=true
 AUTO_DISCOVER_QUEUE_TTL_DAYS=1
 
@@ -882,7 +882,7 @@ CLEANUP_LOCAL_IMAGES_AFTER_FTP_UPLOAD=true
 AUTO_DASHBOARD_PIN=
 AUTO_DASHBOARD_ALLOW_REMOTE=false
 
-POST_CRON=0 8,13,19 * * *
+POST_CRON=47 6,9,12,15,18,20,22 * * *
 DEFAULT_THEME=auto
 AUTO_DISCOVER_QUERY=podcast indonesia hari ini|podcast indonesia viral hari ini|podcast artis indonesia hari ini|podcast artis indonesia terbaru|podcast artis indonesia viral|podcast musisi indonesia terbaru|podcast musisi indonesia viral|podcast musisi indonesia hari ini|podcast ariel noah terbaru|podcast ahmad dhani terbaru|podcast ari lasso terbaru|podcast penyanyi indonesia terbaru|podcast band indonesia terbaru|podcast deddy corbuzier terbaru|podcast vindes terbaru
 AUTO_DISCOVER_DAILY_QUERY=podcast musisi indonesia viral hari ini
@@ -1115,23 +1115,23 @@ Batas upload YouTube per hari. Default produksi: `0`, artinya aplikasi tidak mem
 
 #### `MAX_SCHEDULED_POSTS_PER_DAY`
 
-Batas publish umum dari run terjadwal GitHub Actions per hari. Default `0`, artinya workflow tetap mengikuti jadwal cron tanpa limit umum. Jika diisi lebih dari `0`, nilai ini menjadi limit umum semua platform.
+Batas publish umum dari run terjadwal GitHub Actions per hari. Default `7`, selaras dengan 7 jadwal cron harian (1 publish per run). Jika diisi lebih dari `0`, nilai ini menjadi limit umum semua platform.
 
 #### `AUTOMATION_QUEUE_LINK_LIMIT`
 
-Jumlah link automasi aktif yang dijaga oleh auto-discovery. Default `5`.
+Jumlah link automasi aktif yang dijaga oleh auto-discovery. Default `10` (kolam ~10 source/hari).
 
 #### `QUEUE_SERIES_TARGET_COUNT`
 
-Jumlah publish sukses yang harus dicapai satu link automasi sebelum selector pindah ke link berikutnya. Default `3`.
+Jumlah publish sukses yang harus dicapai satu link automasi sebelum selector pindah ke link berikutnya. Default `1` (1 source = 1 clip).
 
 #### `SCHEDULED_CLIPS_PER_RUN`
 
-Jumlah clip yang diproses setiap scheduled run. Default `1`, sehingga 6 jadwal harian menghasilkan maksimal 6 proses terjadwal.
+Jumlah clip yang diproses setiap scheduled run non-series. Default `1`, sehingga 7 jadwal harian menghasilkan maksimal 7 proses terjadwal.
 
 #### `AUTO_DISCOVER_DAILY_QUEUE_LIMIT`
 
-Batas jumlah video auto-discovery yang dijaga untuk satu `target_date`. Default produksi: `5`, mengikuti window queue automasi.
+Batas jumlah video auto-discovery yang dijaga untuk satu `target_date`. Default produksi: `10`, mengikuti window queue automasi.
 
 #### `AUTO_DISCOVER_CHANNEL_ONLY`
 
@@ -1287,7 +1287,7 @@ Jika `true`, dashboard bisa diakses remote. Default sebaiknya `false`.
 
 #### `POST_CRON`
 
-Jadwal lokal jika memakai scheduler internal.
+Jadwal lokal jika memakai scheduler internal (`src/scheduler.js`). node-cron mendukung daftar jam dalam satu ekspresi, mis. `47 6,9,12,15,18,20,22 * * *` untuk 7 run/hari. Jalur produksi tetap memakai blok `schedule:` di workflow GitHub Actions (UTC).
 
 #### `DEFAULT_THEME`
 

@@ -104,14 +104,19 @@ on:
         required: false
         default: ""
   schedule:
-    # GitHub schedule uses UTC.
-    # Target 3 scheduled runs per hari. Tiap run series merender 3 klip sekaligus
-    # (1 link = 3 video). Run 1 = Link A (3 video), Run 2 = Link B (3 video) -> 6 video/hari.
-    # Run 3 = buffer retry; MAX_SCHEDULED_POSTS_PER_DAY=6 menjaga total tetap 6.
-    # Menit dibuat ganjil agar tidak menabrak jam puncak cron GitHub.
-    - cron: "3 23 * * *"  # 06:03 WIB - Link A (3 klip)
-    - cron: "3 5 * * *"   # 12:03 WIB - Link B (3 klip)
-    - cron: "3 11 * * *"  # 18:03 WIB - buffer retry sampai cap 6 tercapai
+    # GitHub schedule uses UTC (WIB = UTC+7).
+    # Target 7 scheduled runs per hari. Tiap run series mengambil 1 source dan
+    # merender 1 klip (QUEUE_SERIES_TARGET_COUNT=1) -> 1 link = 1 video.
+    # 7 run = 7 video/hari; MAX_SCHEDULED_POSTS_PER_DAY=7 menjaga cap tetap 7.
+    # Jam dipilih di waktu santai / orang buka HP; menit off-peak (bukan :00/:30)
+    # agar delay antrian cron GitHub minimal.
+    - cron: "47 23 * * *"  # 06:47 WIB - bangun pagi / commute
+    - cron: "47 2 * * *"   # 09:47 WIB - mid-morning break
+    - cron: "17 5 * * *"   # 12:17 WIB - makan siang
+    - cron: "17 8 * * *"   # 15:17 WIB - break sore
+    - cron: "47 11 * * *"  # 18:47 WIB - pulang kerja
+    - cron: "47 13 * * *"  # 20:47 WIB - prime time malam
+    - cron: "17 15 * * *"  # 22:17 WIB - scroll sebelum tidur
 
 concurrency:
   group: podcast-clipper-automation
@@ -216,9 +221,9 @@ jobs:
       OPENAI_TRANSCRIBE_MODEL: ${{ secrets.OPENAI_TRANSCRIBE_MODEL || 'gpt-4o-mini-transcribe' }}
       AI_REQUEST_TIMEOUT_SECONDS: ${{ secrets.AI_REQUEST_TIMEOUT_SECONDS || '25' }}
       TRANSCRIBE_PROVIDER: ${{ secrets.TRANSCRIBE_PROVIDER || 'deepgram' }}
-      MAX_SCHEDULED_POSTS_PER_DAY: ${{ vars.MAX_SCHEDULED_POSTS_PER_DAY || secrets.MAX_SCHEDULED_POSTS_PER_DAY || '0' }}
-      AUTOMATION_QUEUE_LINK_LIMIT: ${{ vars.AUTOMATION_QUEUE_LINK_LIMIT || secrets.AUTOMATION_QUEUE_LINK_LIMIT || '5' }}
-      QUEUE_SERIES_TARGET_COUNT: ${{ vars.QUEUE_SERIES_TARGET_COUNT || secrets.QUEUE_SERIES_TARGET_COUNT || '3' }}
+      MAX_SCHEDULED_POSTS_PER_DAY: ${{ vars.MAX_SCHEDULED_POSTS_PER_DAY || secrets.MAX_SCHEDULED_POSTS_PER_DAY || '7' }}
+      AUTOMATION_QUEUE_LINK_LIMIT: ${{ vars.AUTOMATION_QUEUE_LINK_LIMIT || secrets.AUTOMATION_QUEUE_LINK_LIMIT || '10' }}
+      QUEUE_SERIES_TARGET_COUNT: ${{ vars.QUEUE_SERIES_TARGET_COUNT || secrets.QUEUE_SERIES_TARGET_COUNT || '1' }}
       SCHEDULED_CLIPS_PER_RUN: ${{ vars.SCHEDULED_CLIPS_PER_RUN || secrets.SCHEDULED_CLIPS_PER_RUN || '1' }}
       DEEPGRAM_ENABLED: ${{ github.event.inputs.deepgram_enabled || '1' }}
       DEEPGRAM_API_KEYS: ${{ secrets.DEEPGRAM_API_KEYS }}
@@ -243,16 +248,16 @@ jobs:
       AUTO_DISCOVER_CHANNEL_ONLY: ${{ vars.AUTO_DISCOVER_CHANNEL_ONLY || secrets.AUTO_DISCOVER_CHANNEL_ONLY || 'false' }}
       AUTO_DISCOVER_ALLOW_OAUTH: ${{ secrets.AUTO_DISCOVER_ALLOW_OAUTH || 'false' }}
       AUTO_DISCOVER_DAILY_SEARCH_ONLY: ${{ secrets.AUTO_DISCOVER_DAILY_SEARCH_ONLY || 'true' }}
-      AUTO_DISCOVER_DAILY_SEARCH_RESULTS: ${{ secrets.AUTO_DISCOVER_DAILY_SEARCH_RESULTS || '5' }}
+      AUTO_DISCOVER_DAILY_SEARCH_RESULTS: ${{ secrets.AUTO_DISCOVER_DAILY_SEARCH_RESULTS || '10' }}
       AUTO_DISCOVER_TRENDING_ENABLED: ${{ secrets.AUTO_DISCOVER_TRENDING_ENABLED || 'false' }}
       AUTO_DISCOVER_TRENDING_CATEGORY_IDS: ${{ secrets.AUTO_DISCOVER_TRENDING_CATEGORY_IDS || '24,22,10' }}
       AUTO_DISCOVER_TRENDING_MAX_RESULTS: ${{ secrets.AUTO_DISCOVER_TRENDING_MAX_RESULTS || '5' }}
       AUTO_DISCOVER_TRENDING_MAX_AGE_HOURS: ${{ secrets.AUTO_DISCOVER_TRENDING_MAX_AGE_HOURS || '36' }}
       AUTO_DISCOVER_CACHE_SYNC_IMMEDIATE: ${{ secrets.AUTO_DISCOVER_CACHE_SYNC_IMMEDIATE || 'true' }}
       AUTO_DISCOVER_VALIDATE_URL: ${{ secrets.AUTO_DISCOVER_VALIDATE_URL || 'true' }}
-      AUTO_DISCOVER_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_MAX_RESULTS || secrets.AUTO_DISCOVER_MAX_RESULTS || '5' }}
-      AUTO_DISCOVER_ADD_COUNT: ${{ vars.AUTO_DISCOVER_ADD_COUNT || secrets.AUTO_DISCOVER_ADD_COUNT || '5' }}
-      AUTO_DISCOVER_DAILY_QUEUE_LIMIT: ${{ vars.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || secrets.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || '5' }}
+      AUTO_DISCOVER_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_MAX_RESULTS || secrets.AUTO_DISCOVER_MAX_RESULTS || '10' }}
+      AUTO_DISCOVER_ADD_COUNT: ${{ vars.AUTO_DISCOVER_ADD_COUNT || secrets.AUTO_DISCOVER_ADD_COUNT || '10' }}
+      AUTO_DISCOVER_DAILY_QUEUE_LIMIT: ${{ vars.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || secrets.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || '10' }}
       AUTO_DISCOVER_EXPIRE_OLD_QUEUE: ${{ secrets.AUTO_DISCOVER_EXPIRE_OLD_QUEUE || 'true' }}
       AUTO_DISCOVER_QUEUE_TTL_DAYS: ${{ secrets.AUTO_DISCOVER_QUEUE_TTL_DAYS || '1' }}
       AUTO_DISCOVER_MIN_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MIN_DURATION_SECONDS || '600' }}
@@ -260,14 +265,14 @@ jobs:
       AUTO_DISCOVER_MIN_VIEWS: ${{ vars.AUTO_DISCOVER_MIN_VIEWS || secrets.AUTO_DISCOVER_MIN_VIEWS || '0' }}
       AUTO_DISCOVER_MIN_VIEWS_PER_HOUR: ${{ vars.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || secrets.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || '0' }}
       AUTO_DISCOVER_PUBLISHED_AFTER_DAYS: ${{ vars.AUTO_DISCOVER_PUBLISHED_AFTER_DAYS || secrets.AUTO_DISCOVER_PUBLISHED_AFTER_DAYS || '30' }}
-      AUTO_DISCOVER_FALLBACK_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_FALLBACK_MAX_RESULTS || secrets.AUTO_DISCOVER_FALLBACK_MAX_RESULTS || '5' }}
+      AUTO_DISCOVER_FALLBACK_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_FALLBACK_MAX_RESULTS || secrets.AUTO_DISCOVER_FALLBACK_MAX_RESULTS || '10' }}
       AUTO_DISCOVER_REGION_CODE: ${{ secrets.AUTO_DISCOVER_REGION_CODE || 'ID' }}
       AUTO_DISCOVER_RELEVANCE_LANGUAGE: ${{ secrets.AUTO_DISCOVER_RELEVANCE_LANGUAGE || 'id' }}
       AUTO_DISCOVER_BLOCKED_CHANNELS: ${{ vars.AUTO_DISCOVER_BLOCKED_CHANNELS || secrets.AUTO_DISCOVER_BLOCKED_CHANNELS || 'Taulany TV|@taulanytv' }}
       AUTO_DISCOVER_CHANNEL_IDS: ${{ secrets.AUTO_DISCOVER_CHANNEL_IDS }}
       AUTO_DISCOVER_CHANNEL_HANDLES: ${{ secrets.AUTO_DISCOVER_CHANNEL_HANDLES || '@corbuzier|@VINDES|@radityadika|@DanielManantaNetwork|@HASCreative|@podkesmas|@podhub|@Kasisolusi' }}
       AUTO_DISCOVER_FRESH_UPLOAD_DAYS: ${{ vars.AUTO_DISCOVER_FRESH_UPLOAD_DAYS || secrets.AUTO_DISCOVER_FRESH_UPLOAD_DAYS || '30' }}
-      AUTO_DISCOVER_CHANNEL_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || secrets.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || '5' }}
+      AUTO_DISCOVER_CHANNEL_MAX_RESULTS: ${{ vars.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || secrets.AUTO_DISCOVER_CHANNEL_MAX_RESULTS || '10' }}
 
       YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY || secrets.YOUTUBE_DATA_API_KEY || secrets.GOOGLE_API_KEY }}
       YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
