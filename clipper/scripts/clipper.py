@@ -1368,15 +1368,18 @@ def build_candidate_clips(segments, config):
 
     if not selected and segments:
         start, end = fallback_non_overlapping_range(segments, max_duration, avoid_ranges, avoid_margin)
-        selected.append(
-            {
-                "score": 0,
-                "start": start,
-                "end": end,
-                "duration": end - start,
-                "text": segment_text_window(segments, start, end, max_chars=per_candidate_chars),
-            }
-        )
+        # Jangan pakai fallback yang lebih pendek dari durasi minimal (mis. subtitle
+        # nyaris kosong / video terlalu pendek) supaya tidak menghasilkan klip cebol.
+        if (end - start) >= min_duration:
+            selected.append(
+                {
+                    "score": 0,
+                    "start": start,
+                    "end": end,
+                    "duration": end - start,
+                    "text": segment_text_window(segments, start, end, max_chars=per_candidate_chars),
+                }
+            )
 
     selected = apply_selection_offset(selected, config)
 
@@ -1558,6 +1561,23 @@ def validate_clips(clips, segments, config):
 
         if end <= start:
             continue
+
+        # Paksakan batas durasi klip: maksimal max_clip_seconds (<=1 menit) dan
+        # minimal min_clip_seconds. Klip terlalu panjang dipotong; klip terlalu
+        # pendek dicoba diperpanjang dalam batas sumber, kalau tetap kurang -> skip
+        # (mencegah klip 3 detik dari subtitle yang minim).
+        min_clip = max(1, int(config.get("min_clip_seconds", 40)))
+        max_clip = max(min_clip, int(config.get("max_clip_seconds", 60)))
+        if end - start > max_clip:
+            end = start + max_clip
+        elif end - start < min_clip:
+            end = start + min_clip
+            if max_time and end > max_time:
+                end = max_time
+                start = max(0.0, end - min_clip)
+            if end - start < min_clip:
+                continue
+
         if clip_overlaps_ranges(start, end, avoid_ranges, avoid_margin):
             continue
 

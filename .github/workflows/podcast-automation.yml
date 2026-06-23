@@ -242,8 +242,8 @@ jobs:
       INSTAGRAM_CONTAINER_MAX_ATTEMPTS: ${{ secrets.INSTAGRAM_CONTAINER_MAX_ATTEMPTS || '90' }}
       TOKEN_REFRESH_BEFORE_DAYS: ${{ secrets.TOKEN_REFRESH_BEFORE_DAYS || '10' }}
       AUTO_DISCOVER_VIDEOS: ${{ secrets.AUTO_DISCOVER_VIDEOS || 'true' }}
-      AUTO_DISCOVER_QUERY: ${{ secrets.AUTO_DISCOVER_QUERY || 'motivasi hidup|motivasi sukses|video motivasi singkat|kata kata motivasi|motivasi pagi|motivasi diri sendiri|motivasi bisnis indonesia|motivasi islami|nasihat kehidupan|motivasi viral indonesia|motivasi semangat hidup|motivasi pantang menyerah|motivasi disiplin diri|motivasi mindset sukses|inspirasi kehidupan' }}
-      AUTO_DISCOVER_DAILY_QUERY: ${{ secrets.AUTO_DISCOVER_DAILY_QUERY || 'motivasi viral hari ini' }}
+      AUTO_DISCOVER_QUERY: ${{ secrets.AUTO_DISCOVER_QUERY || 'motivasi hidup bahasa indonesia|ceramah motivasi indonesia|motivasi sukses bahasa indonesia|motivasi pagi bahasa indonesia|motivator indonesia terbaru|motivasi pantang menyerah indonesia|nasihat kehidupan indonesia|motivasi bangkit dari kegagalan|motivasi kerja keras indonesia|renungan kehidupan indonesia' }}
+      AUTO_DISCOVER_DAILY_QUERY: ${{ secrets.AUTO_DISCOVER_DAILY_QUERY || 'motivasi hidup indonesia hari ini' }}
       AUTO_DISCOVER_USE_API: ${{ secrets.AUTO_DISCOVER_USE_API || 'false' }}
       AUTO_DISCOVER_CHANNEL_ONLY: ${{ vars.AUTO_DISCOVER_CHANNEL_ONLY || secrets.AUTO_DISCOVER_CHANNEL_ONLY || 'false' }}
       AUTO_DISCOVER_ALLOW_OAUTH: ${{ secrets.AUTO_DISCOVER_ALLOW_OAUTH || 'false' }}
@@ -260,7 +260,7 @@ jobs:
       AUTO_DISCOVER_DAILY_QUEUE_LIMIT: ${{ vars.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || secrets.AUTO_DISCOVER_DAILY_QUEUE_LIMIT || '10' }}
       AUTO_DISCOVER_EXPIRE_OLD_QUEUE: ${{ secrets.AUTO_DISCOVER_EXPIRE_OLD_QUEUE || 'true' }}
       AUTO_DISCOVER_QUEUE_TTL_DAYS: ${{ secrets.AUTO_DISCOVER_QUEUE_TTL_DAYS || '1' }}
-      AUTO_DISCOVER_MIN_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MIN_DURATION_SECONDS || '60' }}
+      AUTO_DISCOVER_MIN_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MIN_DURATION_SECONDS || '180' }}
       AUTO_DISCOVER_MAX_DURATION_SECONDS: ${{ secrets.AUTO_DISCOVER_MAX_DURATION_SECONDS || '1800' }}
       AUTO_DISCOVER_MIN_VIEWS: ${{ vars.AUTO_DISCOVER_MIN_VIEWS || secrets.AUTO_DISCOVER_MIN_VIEWS || '0' }}
       AUTO_DISCOVER_MIN_VIEWS_PER_HOUR: ${{ vars.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || secrets.AUTO_DISCOVER_MIN_VIEWS_PER_HOUR || '0' }}

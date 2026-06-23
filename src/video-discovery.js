@@ -20,52 +20,35 @@ import {
 } from "./queue-policy.js";
 
 const DEFAULT_QUERIES = [
-  "motivasi hidup",
-  "motivasi sukses",
-  "video motivasi singkat",
-  "kata kata motivasi",
-  "motivasi pagi",
-  "motivasi diri sendiri",
-  "motivasi bisnis indonesia",
-  "motivasi islami",
-  "nasihat kehidupan",
-  "motivasi viral indonesia",
-  "motivasi semangat hidup",
-  "motivasi pantang menyerah",
-  "motivasi disiplin diri",
-  "motivasi mindset sukses",
-  "inspirasi kehidupan"
+  "motivasi hidup bahasa indonesia",
+  "ceramah motivasi indonesia",
+  "motivasi sukses bahasa indonesia",
+  "motivasi pagi bahasa indonesia",
+  "motivator indonesia terbaru",
+  "motivasi pantang menyerah indonesia",
+  "nasihat kehidupan indonesia",
+  "motivasi bangkit dari kegagalan",
+  "motivasi kerja keras indonesia",
+  "renungan kehidupan indonesia"
 ];
 
 const FALLBACK_QUERIES = [
-  "motivasi hidup terbaru",
-  "motivasi hidup viral",
-  "video motivasi indonesia",
-  "motivasi sukses muda",
-  "motivasi kerja keras",
-  "motivasi bangkit dari kegagalan",
-  "kata kata bijak kehidupan",
-  "motivasi diri terbaru",
-  "motivasi pengembangan diri",
-  "motivasi produktif",
-  "motivasi mental kuat",
-  "motivasi pengusaha indonesia",
-  "ceramah motivasi singkat",
-  "renungan kehidupan",
-  "motivasi belajar",
+  "motivasi hidup indonesia terbaru",
+  "ceramah motivasi penyemangat",
+  "motivasi sukses dari nol indonesia",
+  "motivator indonesia viral",
+  "motivasi disiplin diri indonesia",
   "motivasi anak muda indonesia",
-  "self improvement indonesia",
-  "motivasi inspiratif",
-  "motivasi spiritual",
-  "quotes motivasi indonesia",
-  "motivasi pagi penyemangat",
-  "motivasi sukses dari nol"
+  "kata bijak kehidupan indonesia",
+  "motivasi pengusaha indonesia",
+  "motivasi percaya diri indonesia",
+  "motivasi semangat hidup indonesia"
 ];
 
 const DEFAULT_CHANNEL_HANDLES = [];
 
-const MOTIVATION_FORMAT_RE = /motivasi|motivation(?:al)?|inspiras[ai]|inspiratif|nasihat|nasehat|self\s*improvement|pengembangan\s*diri|kata\s*kata\s*bijak|kata\s*bijak|quotes?|renungan|ceramah\s*motivasi/i;
-const MOTIVATION_TOPIC_EXTRA_RE = /sukses|mindset|disiplin|semangat|bangkit|pantang\s*menyerah|produktif|mental|kehidupan|hidup|spiritual|kerja\s*keras|kegagalan|percaya\s*diri|growth|berproses|pejuang|hijrah/i;
+const MOTIVATION_FORMAT_RE = /motivasi|motivator|inspiras[ai]|inspiratif|nasihat|nasehat|pengembangan\s*diri|kata\s*kata\s*bijak|kata\s*bijak|renungan|ceramah\s*motivasi/i;
+const MOTIVATION_TOPIC_EXTRA_RE = /sukses|pola\s*pikir|disiplin|semangat|bangkit|pantang\s*menyerah|produktif|kehidupan|spiritual|kerja\s*keras|kegagalan|percaya\s*diri|berproses|pejuang|hijrah/i;
 const MOTIVATION_TOPIC_RE = new RegExp(`${MOTIVATION_FORMAT_RE.source}|${MOTIVATION_TOPIC_EXTRA_RE.source}`, "i");
 const POLITICAL_TOPIC_RE = /politik|pilpres|pemilu|partai|dpr|mpr|presiden|wakil\s*presiden|menteri|kabinet|reshuffle|prabowo|jokowi|gibran|anies|ganjar|bawaslu|kpu|kompastv|kompas\s*tv|inews|cnn\s*indonesia|forum\s*keadilan|akbar\s*faizal|total\s*politik|tempo(?:dotco)?|bocor\s*alus|brin/i;
 const NON_MOTIVATION_NOISE_RE = /official\s*music\s*video|official\s*audio|video\s*klip|karaoke|cover\s*lagu|trailer|teaser|sinetron|drama|full\s*movie|film\s*pendek|gameplay|live\s*stream\s*game|highlight\s*bola/i;
