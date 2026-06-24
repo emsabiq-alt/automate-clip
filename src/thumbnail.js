@@ -141,6 +141,13 @@ export async function prependThumbnailIntro({ job, videoPath, thumbnailPath, tex
   const introAudioFilter = buildIntroAudioFilter({ introSeconds: introSecondsArg, speech });
   const transition = await resolveThumbnailTransition();
 
+  // Total durasi (intro TTS judul + clip utama) tidak boleh melebihi MAX_CLIP_SECONDS.
+  // Clip utama dipotong agar intro + clip <= batas total.
+  const maxTotalSeconds = Math.max(introSeconds + 1, Number(config.clipper.maxClipSeconds) || 60);
+  const mainMaxSeconds = Math.max(0.5, maxTotalSeconds - introSeconds);
+  const mainMaxSecondsArg = formatFfmpegSeconds(mainMaxSeconds);
+  const maxTotalSecondsArg = formatFfmpegSeconds(maxTotalSeconds);
+
   await Promise.all([
     fs.rm(introPath, { force: true }).catch(() => {}),
     fs.rm(outputPath, { force: true }).catch(() => {}),
@@ -206,7 +213,7 @@ export async function prependThumbnailIntro({ job, videoPath, thumbnailPath, tex
       "-i", transition.path
     ] : []),
     "-filter_complex",
-    buildFinalConcatFilter({ introSecondsArg, transition }),
+    buildFinalConcatFilter({ introSecondsArg, mainMaxSecondsArg, transition }),
     "-map", "[v]",
     "-map", "[a]",
     "-c:v", "libx264",
@@ -224,6 +231,7 @@ export async function prependThumbnailIntro({ job, videoPath, thumbnailPath, tex
     "-muxpreload", "0",
     "-muxdelay", "0",
     "-avoid_negative_ts", "disabled",
+    "-t", maxTotalSecondsArg,
     "-movflags", "+faststart",
     outputPath
   ]);
@@ -276,24 +284,28 @@ async function resolveIntroVisual({ videoPath, thumbnailPath, outputPath, visual
   return { path: outputPath, mode: "video_freeze_frame" };
 }
 
-function buildFinalConcatFilter({ introSecondsArg, transition }) {
+function buildFinalConcatFilter({ introSecondsArg, mainMaxSecondsArg, transition }) {
+  // Potong clip utama agar (intro + clip) tidak melebihi batas total durasi.
+  const mainTrim = mainMaxSecondsArg ? `trim=duration=${mainMaxSecondsArg},setpts=PTS-STARTPTS,` : "";
+  const mainAudioTrim = mainMaxSecondsArg ? `,atrim=duration=${mainMaxSecondsArg},asetpts=PTS-STARTPTS` : "";
+
   const filters = [
     "[0:v]setpts=PTS-STARTPTS,scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920,setsar=1,fps=30,format=yuv420p[v0]"
   ];
 
   if (transition) {
     filters.push(
-      "[1:v]setpts=PTS-STARTPTS,scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920,setsar=1,fps=30,format=rgba[basev]",
+      `[1:v]setpts=PTS-STARTPTS,scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920,setsar=1,fps=30,${mainTrim}format=rgba[basev]`,
       `[2:v]setpts=PTS-STARTPTS,scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920,setsar=1,fps=30,trim=duration=${transition.sourceDurationArg},setpts=(PTS-STARTPTS)/${transition.speedArg},format=rgba,colorkey=${transition.keyColor}:${transition.keySimilarity}:${transition.keyBlend},format=rgba[tr]`,
       `[basev][tr]overlay=0:0:eof_action=pass:shortest=0:enable='between(t,0,${transition.durationArg})',format=yuv420p[v1]`
     );
   } else {
-    filters.push("[1:v]setpts=PTS-STARTPTS,scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920,setsar=1,fps=30,format=yuv420p[v1]");
+    filters.push(`[1:v]setpts=PTS-STARTPTS,scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920,setsar=1,fps=30,${mainTrim}format=yuv420p[v1]`);
   }
 
   filters.push(
     `[0:a]aresample=async=1:first_pts=0,asetpts=PTS-STARTPTS,apad,atrim=duration=${introSecondsArg}[a0]`,
-    "[1:a]aresample=async=1:first_pts=0,asetpts=PTS-STARTPTS[a1]",
+    `[1:a]aresample=async=1:first_pts=0,asetpts=PTS-STARTPTS${mainAudioTrim}[a1]`,
     "[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a]"
   );
   return filters.join(";");
